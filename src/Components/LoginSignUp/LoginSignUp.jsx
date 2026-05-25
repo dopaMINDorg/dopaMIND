@@ -48,7 +48,7 @@ const LoginSignUp = () => {
       if (data){
         console.log(data)
         alert("Login successful!")
-        navigate("/home")
+        navigate("/preferences")
       }
     }
   };
