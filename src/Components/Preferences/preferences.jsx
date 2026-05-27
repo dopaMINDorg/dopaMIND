@@ -23,7 +23,15 @@ const Home = () => {
       return
     }
 
-    const notif_time = new Date(notifTime).getTime()
+    const [hours, minutes] = notifTime.split(":")
+    const notifDate = new Date()
+    notifDate.setHours(hours)
+    notifDate.setMinutes(minutes)
+    notifDate.setSeconds(0)
+    notifDate.setMilliseconds(0)
+
+    const notif_time = notifDate.toISOString()
+
     const { data, error } = await supabase 
       .from('Notification Time')
       .update({notif_time})
@@ -63,7 +71,6 @@ const Home = () => {
   }, [])
 
 
-  //eh actually how to put in a submit button for this 
 
   return (
     <div className="page home">
