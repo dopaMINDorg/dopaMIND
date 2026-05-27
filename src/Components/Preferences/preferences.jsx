@@ -6,21 +6,37 @@ import { Link } from 'react-router-dom'
 const Home = () => {
   const [fetchError, setFetchError] = useState(null)
   const [prefs, setPrefs] = useState(null)
-
-  /*const checkUser = async () => {
-  const { data, error } = await supabase.auth.getUser()
-
-  console.log(data)
-  console.log(error)
-  }
-  checkUser()*/
-
-
+  const [notifTime, setNotifTime] = useState("")
 
   const handleDelete = async (id) => {
     setPrefs(prevPrefs => {
       return prevPrefs.filter(pr => pr.id !== id)
     })
+  }
+  
+  const handleNotifTime = async (e) => {
+    e.preventDefault()
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+    if (userError || !user) {
+      alert("User not logged in")
+      return
+    }
+
+    const notif_time = new Date(notifTime).getTime()
+    const { data, error } = await supabase 
+      .from('Notification Time')
+      .update({notif_time})
+      .eq('id', user.id)
+      .select()
+
+    if (error){
+      console.log(error)
+      alert("unable to update time")
+    } 
+    if (data){
+      console.log(data)
+    }
   }
 
   
@@ -47,7 +63,7 @@ const Home = () => {
   }, [])
 
 
-  
+  //eh actually how to put in a submit button for this 
 
   return (
     <div className="page home">
@@ -55,6 +71,16 @@ const Home = () => {
       <Link to={"/Create"}>
           <i className="material-icons">CREATE</i>
       </Link>
+      
+      <form onSubmit={handleNotifTime}>
+        <input 
+          type="time"
+          id="notification-time"
+          value={notifTime}
+          onChange={(e) => setNotifTime(e.target.value)}
+        />
+        <button>Set your time pref</button>
+         </form>
 
       {prefs && (
         <div className="Preferences">
