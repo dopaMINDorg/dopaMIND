@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+/*import React, { useState, useEffect } from 'react'
 import { useCalendarApp, ScheduleXCalendar } from '@schedule-x/react'
 import {
   createViewDay,
@@ -40,4 +40,4 @@ const CalendarApp = () => {
   )
 }
  
-export default CalendarApp
+export default CalendarApp */

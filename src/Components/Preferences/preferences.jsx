@@ -87,7 +87,7 @@ const Home = () => {
           onChange={(e) => setNotifTime(e.target.value)}
         />
         <button>Set your time pref</button>
-         </form>
+      </form>
 
       {prefs && (
         <div className="Preferences">
