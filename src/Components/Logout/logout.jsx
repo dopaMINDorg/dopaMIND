@@ -11,8 +11,8 @@ const Logout = () => {
             </head>
             <div className="page">
                 <div className="logout-container"> 
-                    <button className="logout-button" onClick={() => navigate("/LoginSignUp")}>Confirm Logout</button>
-                    <button className="go-home-button" onClick={() => navigate("/Home")}>Go Home</button>
+                    <button className="logout-button" onClick={() => navigate("/login-sign-up")}>Confirm Logout</button>
+                    <button className="go-home-button" onClick={() => navigate("/home")}>Go Home</button>
                 </div>
             </div>
         </>

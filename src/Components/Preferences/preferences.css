@@ -1,0 +1,93 @@
+body {
+    background: #f0f4f8;
+    min-height: 100vh;
+    margin: 0;
+}
+.header-container {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.header {
+  flex: 1;
+  font-family: cooper black, sans-serif !important;
+  font-size: 50px !important;
+  margin-bottom: 20px;
+  color:#364a61
+}
+
+.home-button {
+    margin-right: 25px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  border: 2px dotted #364a61;
+}
+
+.form input[type="time"] {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: cooper black, sans-serif;
+  font-size: 16px;
+  color: #364a61;
+}
+.create-button {
+  padding: 10px 20px;
+  background-color: #668db8;
+  color: #fff8d8;
+  border: 2px dotted #364a61;
+  border-radius: 8px;
+  font-family: cooper black, sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.create-button:hover {
+  background-color: #364a61;
+  color: #fff8d8;
+}
+.preferences {
+  margin-top: 20px;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.preferences-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 220px);
+  place-content: center;
+  column-gap: 50px;
+  row-gap: 24px;
+  margin-right: 25px;
+  margin-bottom: 25px;
+  
+}
+
+
+
+
+
+
+
+

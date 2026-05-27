@@ -14,7 +14,7 @@ return (
     </head>
     <div className="header-container">
         <div className="header">Weekly Spread</div>
-        <button title="Home" className="home" onClick={() => navigate("/Home")}><HomeIcon /></button>
+        <button title="Home" className="home" onClick={() => navigate("/home")}><HomeIcon /></button>
     </div>
     <div> <CalendarApp /> </div>
     </>

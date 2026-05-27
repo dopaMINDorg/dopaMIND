@@ -36,10 +36,10 @@ const Home = () => {
             </div>
         </div>
         <div className="icon-container">
-            <button title="Set Preferences"><PreferenceIcon /></button> 
-            <button title="Weekly Spread" onClick={() => navigate("/WeeklySpread")}><WeeklyIcon /></button>      
-            <button title="Reflection" onClick={() => navigate("/Reflection")}><ReflectionIcon /></button>
-            <button title="Logout" onClick={() => navigate("/Logout")}><LogoutIcon /></button> 
+            <button title="Set Preferences" onClick={() => navigate("/preferences")}><PreferenceIcon /></button> 
+            <button title="Weekly Spread" onClick={() => navigate("/weekly-spread")}><WeeklyIcon /></button>      
+            <button title="Reflection" onClick={() => navigate("/reflection")}><ReflectionIcon /></button>
+            <button title="Logout" onClick={() => navigate("/logout")}><LogoutIcon /></button> 
         </div>
 
     

@@ -1,9 +1,12 @@
 import supabase from '../../config/supabaseClient'
 import { useEffect, useState } from "react"
 import PreferenceCard from "./Card"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import HomeIcon from '@mui/icons-material/HomeFilled';
+import "./preferences.css"
 
-const Home = () => {
+const Preferences = () => {
+  const navigate = useNavigate();
   const [fetchError, setFetchError] = useState(null)
   const [prefs, setPrefs] = useState(null)
   const [notifTime, setNotifTime] = useState("")
@@ -73,25 +76,32 @@ const Home = () => {
 
 
   return (
-    <div className="page home">
+    <>
+      <head>
+        <title>Preferences</title>
+      </head>
       {fetchError && <p>{fetchError}</p>}
-      <Link to={"/Create"}>
-          <i className="material-icons">CREATE</i>
-      </Link>
+      <div className="header-container">
+      <div className="header">Set Your Preferences</div>
+      <button title="Home" className="home-button" onClick={() => navigate("/home")}><HomeIcon /></button>
+      </div>
       
-      <form onSubmit={handleNotifTime}>
+      <div className="content">
+      <form className="form" onSubmit={handleNotifTime}>
         <input 
           type="time"
           id="notification-time"
           value={notifTime}
           onChange={(e) => setNotifTime(e.target.value)}
         />
-        <button>Set your time pref</button>
-         </form>
+        <button className="pref-btn">Set your time pref</button>
+      </form>
+      <button className="create-button" onClick={() => navigate("/create")}>CREATE</button>
+      </div>
 
       {prefs && (
-        <div className="Preferences">
-          <div className="Preferences-grid">
+        <div className="preferences">
+          <div className="preferences-grid">
             {prefs.map(pref => (
               <PreferenceCard
                 key={pref.id}
@@ -102,8 +112,8 @@ const Home = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }
 
-export default Home
+export default Preferences

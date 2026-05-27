@@ -1,6 +1,7 @@
 import { useState } from "react"
 import supabase from '../../config/supabaseClient'
 import { useNavigate } from "react-router-dom"
+import "./Create.css";
 
 const Create = () => {
   const navigate = useNavigate()
@@ -41,28 +42,34 @@ const Create = () => {
   }
 
   return (
-    <div className="page create">
-      <h2>Create</h2>
-      <label htmlFor="Activity">Activity:</label>
-      <form onSubmit={handleSubmit}>
+    <>
+      <head>
+        <title>Preferences</title>
+      </head>
+      <div className="header">Create Preferences</div>
+      <div className="this-container">
+      <form className="this-form" onSubmit={handleSubmit}>
         <input 
+          className="this-input"
+          placeholder="Activity:"
           type="text"
           id="Activity"
           value={activity}
           onChange={(e) => setActivity(e.target.value)}
         />
 
-
-        <label htmlFor="time-hours">Hours:</label>
         <input
+          className="this-input"
+          placeholder="Hours:"
           type="number"
           id="time-hours"
           value={time_hours}
           onChange={(e) => setHours(e.target.value)}
         />
 
-        <label htmlFor="time-minutes">Minutes:</label>
         <input
+          className="this-input"
+          placeholder="Minutes:"
           type="number"
           id="time-minutes"
           value={time_minutes}
@@ -70,10 +77,11 @@ const Create = () => {
         />
 
 
-        <button>Add a New Activity</button>
+        <button className="add-btn">Add Activity</button>
         {formError && <p className="error">{formError}</p>}  
       </form>
-    </div>
+      </div>
+    </>
   )
 }
 

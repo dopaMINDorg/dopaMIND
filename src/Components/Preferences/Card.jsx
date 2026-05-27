@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import supabase from '../../config/supabaseClient'
+import "./Card.css"
     const PreferenceCard = ({ pref, onDelete }) => {
+      const navigate = useNavigate();
         const handleDelete = async () => { const {data, error} = await supabase
             .from('Preferences')
             .delete()
@@ -17,24 +19,27 @@ import supabase from '../../config/supabaseClient'
      }
         
     return (
-    <div className="smoothie-card">
-      <h3>{pref.activity}</h3>
+    <div className="activity-card">
+      <div className="activity">{pref.activity}</div>
 
-      <p style={{ color: "red", fontSize: "20px" }}>
+      <div className="time">
         {pref.time_hours} hrs {pref.time_minutes} mins
-      </p>
+      </div>
 
       <div className="buttons">
-        <Link to={"/" + pref.id}>
-          <i className="material-icons">edit</i>
-        </Link>
+        <button 
+          onClick= {() => navigate("/" + pref.id)}
+          className="material-icons"
+        >
+          edit
+        </button>
 
-        <i
+        <button
           className="material-icons"
           onClick={handleDelete}
         >
           delete
-        </i>
+        </button>
       </div>
     </div>
   )

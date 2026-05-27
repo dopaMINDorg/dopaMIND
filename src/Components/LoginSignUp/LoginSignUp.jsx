@@ -32,8 +32,8 @@ const LoginSignUp = () => {
       }
       if (data) {
         console.log(data)
-        alert("Sign up successful!")
-        navigate("/home")
+        alert("Sign up successful! Please Login to continue.")
+        navigate("/login-sign-up")
       }
     } else {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -48,7 +48,7 @@ const LoginSignUp = () => {
       if (data){
         console.log(data)
         alert("Login successful!")
-        navigate("/preferences")
+        navigate("/home")
       }
     }
   };
@@ -57,6 +57,7 @@ const LoginSignUp = () => {
 
 
   return (
+    
     <>
     <img src={Logo} alt="" id="logo"/>
     <div className="container">
@@ -76,6 +77,7 @@ const LoginSignUp = () => {
         <button id="enter-button" onClick={() => handleAuth(action)}>Enter</button>
     </div>
     </>
+    
   );
 }
 function Input({value, imgType, dummy, inputValue, setInputValue}) {
