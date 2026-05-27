@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 const Home = () => {
   const [fetchError, setFetchError] = useState(null)
   const [prefs, setPrefs] = useState(null)
-  const [notifTime, setNotifTime] = useState("")
+  const [notifTime, setNotifTime] = useState("00:00")
 
   const handleDelete = async (id) => {
     setPrefs(prevPrefs => {
