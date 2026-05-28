@@ -10,6 +10,7 @@ const Preferences = () => {
   const [fetchError, setFetchError] = useState(null)
   const [prefs, setPrefs] = useState(null)
   const [notifTime, setNotifTime] = useState("00:00")
+  const [formError, setFormError] = useState('')
 
   const handleDelete = async (id) => {
     setPrefs(prevPrefs => {
@@ -24,6 +25,11 @@ const Preferences = () => {
     if (userError || !user) {
       alert("User not logged in")
       return
+    }
+
+    if(!notifTime){
+      setFormError('Please fill in all the fields correctly')
+      return 
     }
 
     const [hours, minutes] = notifTime.split(":")
@@ -46,6 +52,7 @@ const Preferences = () => {
       alert("unable to update time")
     } 
     if (data){
+      setFormError(null) 
       console.log(data)
     }
   }
