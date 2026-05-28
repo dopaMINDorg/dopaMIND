@@ -9,7 +9,7 @@ const Preferences = () => {
   const navigate = useNavigate();
   const [fetchError, setFetchError] = useState(null)
   const [prefs, setPrefs] = useState(null)
-  const [notifTime, setNotifTime] = useState("")
+  const [notifTime, setNotifTime] = useState("00:00")
 
   const handleDelete = async (id) => {
     setPrefs(prevPrefs => {
@@ -98,6 +98,7 @@ const Preferences = () => {
       </form>
       <button className="create-button" onClick={() => navigate("/create")}>CREATE</button>
       </div>
+
 
       {prefs && (
         <div className="preferences">

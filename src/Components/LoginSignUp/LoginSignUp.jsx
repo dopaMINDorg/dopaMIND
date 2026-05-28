@@ -70,9 +70,9 @@ const LoginSignUp = () => {
           <div className={action==="Sign Up"?"action gray":"action"} onClick={()=>{setAction("Login")}}>Login</div>
         </div>
         <div className="inputs">
-            <Input value="text" imgType={<FaceIcon className="icon"/>} dummy="Name" inputValue={name} setInputValue={setName}/>
-            <Input value="email" imgType={<EmailIcon className="icon"/>} dummy="Email ID"inputValue={email} setInputValue={setEmail}/>
-            <Input value="password" imgType={<PasswordIcon className="icon" />} dummy="Password" inputValue={password} setInputValue={setPassword}/>
+            <Input value="text" dummy="Name" inputValue={name} setInputValue={setName}/>
+            <Input value="email"  dummy="Email ID"inputValue={email} setInputValue={setEmail}/>
+            <Input value="password"  dummy="Password" inputValue={password} setInputValue={setPassword}/>
         </div>
         <button id="enter-button" onClick={() => handleAuth(action)}>Enter</button>
     </div>
@@ -80,9 +80,8 @@ const LoginSignUp = () => {
     
   );
 }
-function Input({value, imgType, dummy, inputValue, setInputValue}) {
+function Input({value, dummy, inputValue, setInputValue}) {
   return (<div className="input">
-            {imgType}
             <input type={value} placeholder={dummy} value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
             </div>);
 }

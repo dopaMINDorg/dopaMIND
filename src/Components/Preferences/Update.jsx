@@ -7,22 +7,27 @@ const Update = () => {
   const {id} = useParams()
   const navigate = useNavigate()
 
-  const [activity, setActivity] = useState('')
-  const [hours, setHours] = useState('')
-  const [minutes, setMinutes] = useState('')
+  const [activity, setActivity] = useState(null)
+  const [time_hours, setHours] = useState(null)
+  const [time_minutes, setMinutes] = useState(null)
   const [formError, setFormError] = useState('')
     
   const handleSubmit = async (e) => {
+
     e.preventDefault()
 
-    if(!activity || !minutes){
-      setFormError('Please fill in all the fields correctly')
-      return 
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+
+    if (userError || !user) {
+      alert("User not logged in")
+      return
     }
+
 
     const { data, error } = await supabase
       .from('Preferences')
-      .update({activity,hours,minutes})
+      .update({activity, time_hours, time_minutes, user_id: user.id})
       .eq('id', id)
       .select()
       .single()
@@ -35,12 +40,13 @@ const Update = () => {
     if(data){
       console.log(data)
       setFormError(null)
-      navigate('/preferences')//if we have updated the smoothie then we redirect back home
+      navigate('/preferences')
     }
 
     
   }
-  //there should be code over here to update without refreshing i just haven't put it in yet
+
+ 
   
   return (
     <div className="page create">
@@ -59,7 +65,7 @@ const Update = () => {
         <input
           type="number"
           id="time-hours"
-          value={hours}
+          value={time_hours}
           onChange={(e) => setHours(e.target.value)}
         />
 
@@ -67,7 +73,7 @@ const Update = () => {
         <input
           type="number"
           id="time-minutes"
-          value={minutes}
+          value={time_minutes}
           onChange={(e) => setMinutes(e.target.value)}
         />
 
