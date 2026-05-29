@@ -1,4 +1,4 @@
-import react from "react";
+import React from "react";
 import HomeIcon from '@mui/icons-material/HomeFilled';
 import "./Reflection.css";
 import { useNavigate } from "react-router-dom";

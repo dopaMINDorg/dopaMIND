@@ -1,7 +1,7 @@
 import supabase from '../../config/supabaseClient'
 import { useEffect, useState } from "react"
 import PreferenceCard from "./Card"
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import HomeIcon from '@mui/icons-material/HomeFilled';
 import "./preferences.css"
 
@@ -103,6 +103,7 @@ const Preferences = () => {
         />
         <button className="pref-btn">Set your time pref</button>
       </form>
+      {formError && <p>{formError}</p>}
       <button className="create-button" onClick={() => navigate("/create")}>CREATE</button>
       </div>
 
