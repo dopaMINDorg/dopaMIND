@@ -55,6 +55,7 @@ const toZDT = (isoString, timeZone) => {
     }))
 
     eventsService.set(formatted)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasks])
 
   return (
