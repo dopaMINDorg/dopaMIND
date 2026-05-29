@@ -56,9 +56,9 @@ const WeeklySpread = () => {
             <title>Weekly Spread</title>
         </head>
 
-        <div className="header-container">
-            <div className="header">Weekly Spread</div>
-            <button title="Home" className="home" onClick={() => navigate("/Home")}><HomeIcon /></button>
+        <div className="weekly-header-container">
+            <div className="weekly-header">Weekly Spread</div>
+            <button title="Home" className="reflection-home" onClick={() => navigate("/Home")}><HomeIcon /></button>
         </div>
 
         <div className="inputTask">

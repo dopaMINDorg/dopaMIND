@@ -19,14 +19,14 @@ import "./Card.css"
      }
         
     return (
-    <div className="activity-card">
+    <div className="preference-activity-card">
       <div className="activity">{pref.activity}</div>
 
-      <div className="time">
+      <div className="preference-time">
         {pref.time_hours} hrs {pref.time_minutes} mins
       </div>
 
-      <div className="buttons">
+      <div className="preference-buttons">
         <button 
           onClick= {() => navigate("/" + pref.id)}
           className="material-icons"

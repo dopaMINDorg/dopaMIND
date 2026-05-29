@@ -60,8 +60,8 @@ const LoginSignUp = () => {
     
     <>
     <img src={Logo} alt="" id="logo"/>
-    <div className="container">
-        <div className="header">
+    <div className="login-container">
+        <div className="login-header">
             <div className="text">{action}</div>
             <div className="underline"></div>
         </div>
@@ -69,10 +69,10 @@ const LoginSignUp = () => {
           <div className={action==="Login"?"action gray":"action"} onClick={()=>{setAction("Sign Up")}}>Sign Up</div>
           <div className={action==="Sign Up"?"action gray":"action"} onClick={()=>{setAction("Login")}}>Login</div>
         </div>
-        <div className="inputs">
-            <Input value="text" dummy="Name" inputValue={name} setInputValue={setName}/>
-            <Input value="email"  dummy="Email ID"inputValue={email} setInputValue={setEmail}/>
-            <Input value="password"  dummy="Password" inputValue={password} setInputValue={setPassword}/>
+        <div className="login-inputs">
+            <Input value="text" dummy= "Name" inputValue={name} setInputValue={setName} imgType={<FaceIcon className="icon"/>}/>
+            <Input value="email"  dummy="Email ID"inputValue={email} setInputValue={setEmail} imgType={<EmailIcon className="icon"/>}/>
+            <Input value="password"  dummy="Password" inputValue={password} setInputValue={setPassword} imgType={<PasswordIcon className="icon" />}/>
         </div>
         <button id="enter-button" onClick={() => handleAuth(action)}>Enter</button>
     </div>
@@ -80,8 +80,9 @@ const LoginSignUp = () => {
     
   );
 }
-function Input({value, dummy, inputValue, setInputValue}) {
-  return (<div className="input">
+function Input({value, dummy, inputValue, setInputValue, imgType}) {
+  return (<div className="login-input">
+            {imgType}
             <input type={value} placeholder={dummy} value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
             </div>);
 }

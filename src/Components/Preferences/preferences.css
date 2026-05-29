@@ -1,60 +1,76 @@
-body {
-    background: #f0f4f8;
-    min-height: 100vh;
-    margin: 0;
-}
-.header-container {
+
+.preference-header-container {
   display: flex;
   align-items: center;
-  margin-top: 5px;
+  justify-content: space-between;
+
+  width: 100%;
+  max-width: 1200px;
+  margin: 5px auto 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-.header {
+.preference-header {
   flex: 1;
-  font-family: cooper black, sans-serif !important;
-  font-size: 50px !important;
+  font-family: "Cooper Black", sans-serif;
+  font-size: 40px;
   margin-bottom: 20px;
-  color:#364a61
+  color: #364a61;
 }
 
-.home-button {
-    margin-right: 25px;
+.preference-home-button {
+  margin-left: 20px;
 }
 
-.content {
+
+.preference-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
   align-items: center;
 }
 
-.form {
+
+
+.time-form {
   display: flex;
   gap: 10px;
   align-items: center;
+
   background: white;
-  padding: 12px;
+  padding: 12px 16px;
+
   border-radius: 12px;
   border: 2px dotted #364a61;
+
+  box-sizing: border-box;
 }
 
-.form input[type="time"] {
+/* input */
+#notification-time {
   padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
   border-radius: 5px;
-  font-family: cooper black, sans-serif;
+  border: 1px solid #ccc;
+
+  font-family: "Cooper Black", sans-serif;
   font-size: 16px;
   color: #364a61;
 }
+
+
 .create-button {
   padding: 10px 20px;
+
   background-color: #668db8;
   color: #fff8d8;
+
   border: 2px dotted #364a61;
   border-radius: 8px;
-  font-family: cooper black, sans-serif;
+
+  font-family: "Cooper Black", sans-serif;
   font-size: 16px;
+
   cursor: pointer;
 }
 
@@ -62,10 +78,13 @@ body {
   background-color: #364a61;
   color: #fff8d8;
 }
+
+
+
 .preferences {
   margin-top: 20px;
-  width: 100%;
 
+  width: 100%;
   display: flex;
   justify-content: center;
 
@@ -73,15 +92,19 @@ body {
   box-sizing: border-box;
 }
 
+
 .preferences-grid {
   display: grid;
-  grid-template-columns: repeat(4, 220px);
-  place-content: center;
-  column-gap: 50px;
-  row-gap: 24px;
-  margin-right: 25px;
-  margin-bottom: 25px;
-  
+
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px 40px;
+
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto 25px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 

@@ -1,35 +1,39 @@
 #logo {
     display: block;
     margin: 10px auto;
-    width: 700px;
+    width: 80%;
+    max-width: 700px;
     height: auto;
 }
 
-.container{
+.login-container {
     display: flex;
     flex-direction: column;
     margin: auto;
     margin-bottom: 30px;
     background: #fff8d8;
-    padding-bottom: 10px;
+    padding: 20px;
     border-radius: 20px;
-    width: 500px;
+
+    width: 90%;
+    max-width: 500px;
 }
 
-.header {
+.login-header {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 9px;
     width: 100%;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 .text {
-    font-size: 48px;
+    font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 500;
     color: #364a61;
-    font-family: cooper black, sans-serif;
+    font-family: "Cooper Black", sans-serif;
+    text-align: center;
 }
 
 .underline {
@@ -39,60 +43,83 @@
     border-radius: 9px;
 }
 
-.inputs {
+.login-inputs {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 5px;
+    margin-top: 10px;
     gap: 25px;
 }
 
-.input {
+.login-input {
     display: flex;
     align-items: center;
     gap: 15px;
-    width: 480px;
-    height: 80px;
-    border-radius: 6px;
+
+    width: 100%;
+    min-height: 70px;
+
+    border-radius: 10px;
     background: #c7ddef;
-    margin: auto;
+    padding: 0 15px;
+    box-sizing: border-box;
 }
 
 .icon {
-    margin: 0px 30px;
+    margin: 0 10px;
+    flex-shrink: 0;
 }
 
-.input input {
-    width: 400px;
+.login-input input {
+    flex: 1;
+    min-width: 0;
+
     height: 50px;
     border: none;
     outline: none;
     background: transparent;
-    font-size: 24px;
-    color: #364a61;
-    font-family: cooper black, sans-serif;
-    border-radius: 10px;
-}
 
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: #364a61;
+    font-family: "Cooper Black", sans-serif;
+}
 
 .action-container {
     display: flex;
-    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    width: 100%;
     margin: 20px auto 30px auto;
 }
 
 .action {
-    width: 180px;
-    height: 30px;
+    flex: 1;
+    max-width: 180px;
+    min-width: 140px;
+}
+
+.action,
+#enter-button {
+    width: 100%;
+    max-width: 180px;
+    min-height: 45px;
+
     background: #364a61;
     color: #fff8d8;
-    font-size: 18px;
-    font-family: cooper black, sans-serif;
+
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-family: "Cooper Black", sans-serif;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
     border-radius: 50px;
     cursor: pointer;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .gray {
@@ -101,22 +128,3 @@
 }
 
 
-#enter-button {
-    width: 180px;
-    height: 30px;
-    background: #364a61;
-    color: #fff8d8;
-    font-size: 18px;
-    font-family: cooper black, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50px;
-    margin: 10px auto;
-}
-
-
-
-body {
- background: #c7ddef;   
-}

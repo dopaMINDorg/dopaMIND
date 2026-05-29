@@ -11,8 +11,8 @@ const Reflection = () => {
             <head>
                 <title>Reflection</title>
             </head>
-            <div className="header-container">
-                <div className="header">Reflection</div>
+            <div className="reflection-header-container">
+                <div className="reflection-header">Reflection</div>
                 <button title="Home" className="reflection" onClick={() => navigate("/home")}><HomeIcon /></button>
             </div>
             <div className="reflection-container">

@@ -88,13 +88,13 @@ const Preferences = () => {
         <title>Preferences</title>
       </head>
       {fetchError && <p>{fetchError}</p>}
-      <div className="header-container">
-      <div className="header">Set Your Preferences</div>
-      <button title="Home" className="home-button" onClick={() => navigate("/home")}><HomeIcon /></button>
+      <div className="preference-header-container">
+      <div className="preference-header">Set Your Preferences</div>
+      <button title="Home" className="preference-home-button" onClick={() => navigate("/home")}><HomeIcon /></button>
       </div>
       
-      <div className="content">
-      <form className="form" onSubmit={handleNotifTime}>
+      <div className="preference-content">
+      <form className="time-form" onSubmit={handleNotifTime}>
         <input 
           type="time"
           id="notification-time"

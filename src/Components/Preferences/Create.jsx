@@ -46,11 +46,11 @@ const Create = () => {
       <head>
         <title>Preferences</title>
       </head>
-      <div className="header">Create Preferences</div>
-      <div className="this-container">
-      <form className="this-form" onSubmit={handleSubmit}>
+      <div className="create-header">Create Preferences</div>
+      <div className="create-container">
+      <form className="create-form" onSubmit={handleSubmit}>
         <input 
-          className="this-input"
+          className="create-input"
           placeholder="Activity:"
           type="text"
           id="Activity"
@@ -59,7 +59,7 @@ const Create = () => {
         />
 
         <input
-          className="this-input"
+          className="create-input"
           placeholder="Hours:"
           type="number"
           id="time-hours"
@@ -68,7 +68,7 @@ const Create = () => {
         />
 
         <input
-          className="this-input"
+          className="create-input"
           placeholder="Minutes:"
           type="number"
           id="time-minutes"
@@ -77,8 +77,8 @@ const Create = () => {
         />
 
 
-        <button className="add-btn">Add Activity</button>
-        {formError && <p className="error">{formError}</p>}  
+        <button className="create-add-btn">Add Activity</button>
+        {formError && <p className="create-error">{formError}</p>}  
       </form>
       </div>
     </>

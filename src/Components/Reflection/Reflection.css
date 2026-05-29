@@ -1,60 +1,72 @@
-.header-container {
+.reflection-header-container {
   display: flex;
   align-items: center;
   margin-top: 5px;
 }
 
-.header {
+.reflection-header {
   flex: 1;
-  font-family: cooper black, sans-serif !important;
-  font-size: 50px !important;
+  font-family: "Cooper Black", sans-serif;
+  font-size: 40px;
   margin-bottom: 20px;
-  color:#364a61
+  max-width: 1200px;
+  margin-left: 20px;
+  align-items: center;
+  color: #364a61;
 }
 
 .reflection {
-    margin-right: 25px;
+  margin-right: 20px;
+}
+
+/* Question boxes */
+.question1-container,
+.question2-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  min-height: 220px;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+
+  border-radius: 20px;
+  margin-bottom: 10px;
 }
 
 .question1-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #efe6d2;
-    border-radius: 20px;
-    height: 220px;
-    border: 2px dotted #fff8d8;
+  background-color: #efe6d2;
+  border: 2px dotted #fff8d8;
 }
 
 .question2-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #fff8d8;
-    border-radius: 20px;
-    height: 220px;
-    border: 2px dotted #efe6d2;
+  background-color: #fff8d8;
+  border: 2px dotted #efe6d2;
 }
+
 
 .reflection-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-right: 25px;
-    margin-top: 0px;
-    margin-left: 25px;
-    margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
+  margin: 0 20px 5px 20px;
 }
 
-.reflection-text  {
-    width: 90%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: none;
-    font-family: cooper black, sans-serif ;
-    color: #364a61;
-    background-color: #f9f9f9;
+
+.reflection-text {
+  width: 90%;
+  max-width: 1000px;
+  min-height: 110px;
+
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  resize: none;
+
+  font-family: "Cooper Black", sans-serif;
+  color: #364a61;
+  background-color: #f9f9f9;
 }

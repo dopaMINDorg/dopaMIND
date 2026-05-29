@@ -1,6 +1,7 @@
 import { useParams, useNavigate} from "react-router-dom"
 import { useState } from "react"
 import supabase from '../../config/supabaseClient'
+//uses create css styling
 
 
 const Update = () => {
@@ -49,28 +50,34 @@ const Update = () => {
  
   
   return (
-    <div className="page create">
-      <h2>Update</h2>
-      <label htmlFor="Activity">Activity:</label>
-      <form onSubmit={handleSubmit}>
+    <>
+      <head>
+        <title>Preferences</title>
+      </head>
+      <div className="create-header">Update Preferences</div>
+      <div className="create-container">
+      <form className="create-form" onSubmit={handleSubmit}>
         <input 
+          className="create-input"
+          placeholder="Activity:"
           type="text"
           id="Activity"
           value={activity}
           onChange={(e) => setActivity(e.target.value)}
         />
 
-
-        <label htmlFor="time-hours">Hours:</label>
         <input
+          className="create-input"
+          placeholder="Hours:"
           type="number"
           id="time-hours"
           value={time_hours}
           onChange={(e) => setHours(e.target.value)}
         />
 
-        <label htmlFor="time-minutes">Minutes:</label>
         <input
+          className="create-input"
+          placeholder="Minutes:"
           type="number"
           id="time-minutes"
           value={time_minutes}
@@ -78,10 +85,11 @@ const Update = () => {
         />
 
 
-        <button>Add a New Activity</button>
-        {formError && <p className="error">{formError}</p>}  
+        <button className="create-add-btn">Add a New Activity</button>
+        {formError && <p className="create-error">{formError}</p>}  
       </form>
-    </div>
+      </div>
+    </>
   )
 }
 

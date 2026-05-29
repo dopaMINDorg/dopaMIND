@@ -13,7 +13,9 @@ import Update from "./Components/Preferences/Update.jsx"
 
 function App() {
   return (
+    
     <BrowserRouter>
+    <div className="App">
       <Routes>
         <Route path="/" element={<LoginSignUp />} />
         <Route path="/login-sign-up" element={<LoginSignUp />} />
@@ -27,7 +29,9 @@ function App() {
         <Route path="*" element={<div> Not Found</div>} />
 
       </Routes>
+      </div>
     </BrowserRouter>
+    
   );
 }
 
