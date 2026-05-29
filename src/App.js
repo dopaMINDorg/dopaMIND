@@ -3,8 +3,8 @@ import './App.css';
 import LoginSignUp from './Components/LoginSignUp/LoginSignUp';
 import Home from './Components/Home/Home';
 import WeeklySpread from "./Components/WeeklySpread/weeklyspread.jsx";
-import Reflection from "./Components/Reflection/Reflection.jsx";
-import Logout from "./Components/Logout/Logout.jsx";
+import Reflection from "./Components/Reflection/reflection.jsx";
+import Logout from "./Components/Logout/logout.jsx";
 import Preferences from "./Components/Preferences/preferences.jsx"
 import Create from "./Components/Preferences/Create.jsx"
 import Update from "./Components/Preferences/Update.jsx"
