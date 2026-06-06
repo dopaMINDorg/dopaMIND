@@ -1,0 +1,49 @@
+.preference-activity-card {
+    background: #efe6d2;
+    padding: 12px;
+    border-radius: 12px;
+    border:#fff8d8 2px dotted;
+    height: 120px;
+    width: 227px;
+    font-family: cooper black, sans-serif;
+    font-size: 25px;
+    color: #533a33;
+    
+}
+
+.preference-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    
+    
+}
+
+.material-icons {
+    font-size: 20px;
+    color: #fff8d8;
+    cursor: pointer;
+    font-family: cooper black, sans-serif;
+    background-color: #668db8;
+    border: 2px dotted #364a61;
+    border-radius: 8px;
+}
+
+.material-icons:hover {
+    background-color: #364a61;
+    color: #fff8d8;
+}
+
+.pref-btn {
+    font-family: cooper black, sans-serif; 
+    height: 30px;
+     background-color: #668db8;
+    border: 2px dotted #364a61;
+    border-radius: 8px;
+    color: #fff8d8;
+}
+
+.pref-btn:hover {
+    background-color: #364a61;
+    color: #fff8d8;
+}

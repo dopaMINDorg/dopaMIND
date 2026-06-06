@@ -2,32 +2,66 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./LoginSignUp.css";
 
+import supabase from "../../config/supabaseClient"
+
 import PasswordIcon from '@mui/icons-material/Password';
 import EmailIcon from '@mui/icons-material/Email';
 import FaceIcon from '@mui/icons-material/Face';
 import Logo from './logo_new.png';
 
 const LoginSignUp = () => {
+
+  //this is changing from Signup to login action
   const [action, setAction] = useState("Sign Up");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
-  function handleLogin(value) {
-   if (value === "Login") {
-    //alert might not be the best way to handle this - change later
-      alert("Login successful!");
+  const handleAuth = async () => {
+    if (action === "Sign Up") {
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        })
+      if (error) {
+        console.error(error.message)
+        alert("Sign up unsuccessful")
+        return
+      }
+      if (data) {
+        console.log(data)
+        alert("Sign up successful! Please Login to continue.")
+        navigate("/login-sign-up")
+      }
     } else {
-      alert("New Account created! Login successful!");
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      })
+      if (error) {
+        console.error(error.message)
+        alert("Login unsuccessful")
+        return;
+      }
+      if (data){
+        console.log(data)
+        alert("Login successful!")
+        navigate("/home")
+      }
     }
-      navigate("/home");
-  }
+  };
+
     
 
 
   return (
+    
     <>
     <img src={Logo} alt="" id="logo"/>
-    <div className="container">
-        <div className="header">
+    <div className="login-container">
+        <div className="login-header">
             <div className="text">{action}</div>
             <div className="underline"></div>
         </div>
@@ -35,21 +69,21 @@ const LoginSignUp = () => {
           <div className={action==="Login"?"action gray":"action"} onClick={()=>{setAction("Sign Up")}}>Sign Up</div>
           <div className={action==="Sign Up"?"action gray":"action"} onClick={()=>{setAction("Login")}}>Login</div>
         </div>
-        <div className="inputs">
-            <Input value="text" imgType={<FaceIcon className="icon"/>} dummy="Name" />
-            <Input value="email" imgType={<EmailIcon className="icon"/>} dummy="Email ID"/>
-            <Input value="password" imgType={<PasswordIcon className="icon" />} dummy="Password" />
+        <div className="login-inputs">
+            <Input value="text" dummy= "Name" inputValue={name} setInputValue={setName} imgType={<FaceIcon className="icon"/>}/>
+            <Input value="email"  dummy="Email ID"inputValue={email} setInputValue={setEmail} imgType={<EmailIcon className="icon"/>}/>
+            <Input value="password"  dummy="Password" inputValue={password} setInputValue={setPassword} imgType={<PasswordIcon className="icon" />}/>
         </div>
-        <button id="enter-button" onClick={() => handleLogin(action)}>Enter</button>
+        <button id="enter-button" onClick={() => handleAuth(action)}>Enter</button>
     </div>
     </>
+    
   );
-};
-
-function Input({value, imgType, dummy}) {
-  return (<div className="input">
+}
+function Input({value, dummy, inputValue, setInputValue, imgType}) {
+  return (<div className="login-input">
             {imgType}
-            <input type={value} placeholder={dummy} />
+            <input type={value} placeholder={dummy} value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
             </div>);
 }
 
