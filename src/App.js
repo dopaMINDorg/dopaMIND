@@ -8,6 +8,7 @@ import Logout from "./Components/Logout/logout.jsx";
 import Preferences from "./Components/Preferences/preferences.jsx"
 import Create from "./Components/Preferences/Create.jsx"
 import Update from "./Components/Preferences/Update.jsx"
+import ReflectionHistory from "./Components/Reflection/ReflectionHistory.jsx"
 /* i think it has to have .jsx at the end for vercel*/
 
 
@@ -26,8 +27,8 @@ function App() {
         <Route path="/preferences" element={<Preferences />}/>
         <Route path="/create" element={<Create />} />
         <Route path="/:id" element={<Update />} />
+        <Route path="/history" element={<ReflectionHistory />} />
         <Route path="*" element={<div> Not Found</div>} />
-
       </Routes>
       </div>
     </BrowserRouter>
