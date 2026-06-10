@@ -10,6 +10,7 @@ const Reflection = () => {
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
     const [loading, setLoading] = useState(false);
+    const [userError, setUserError] = useState(false); // these are errors that users need to handle, not system errors
 
     const fetchQuestions = async () => {
         setLoading(true);
@@ -17,8 +18,10 @@ const Reflection = () => {
 
         if(error) {
             console.error("Error fetching questions:", error);
+            return;
         } else {
-        setQuestions(data);     
+            setAnswers({}); // clear response textbox when new questions are generated
+            setQuestions(data);     
         }
 
         setLoading(false);
@@ -30,10 +33,20 @@ const Reflection = () => {
         setAnswers((prev) => ({
         ...prev,
         [id]: value,
-     }));
-  };
+        }));
+    };
 
   const handleSubmit = async () => {
+    const hasEmptyAnswer = questions.some((q) => !answers[q.id]?.trim());
+
+    if(hasEmptyAnswer) {
+        setUserError(true);
+        alert("Please answer all questions before submitting.");
+        return;
+    }
+
+    setUserError(false);
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -49,10 +62,11 @@ const Reflection = () => {
       .insert(inserts);
 
     if (error) {
-      console.log(error);
+      console.error("Error in submitting response:", error);
     } else {
       alert("Saved!");
-      fetchQuestions(); // auto refresh new prompts
+      setAnswers({}); // clear response textbox after submission
+      fetchQuestions(); // refreshes questions after submit
     }
   };
 
@@ -60,12 +74,14 @@ const Reflection = () => {
 
      return (
     <>
+    <head>
+            <title>Reflection</title>
+    </head>
       <div className="reflection-header-container">
         <div className="reflection-header">Reflection</div>
 
         <button
           title="Home"
-          className="reflection"
           onClick={() => navigate("/home")}
         >
           <HomeIcon />
@@ -78,7 +94,7 @@ const Reflection = () => {
         ) : (
           questions.map((q) => (
             <div className="question-container" key={q.id}>
-              <h2>{q.reflection_prompts}</h2>
+              <h2 id="question">{q.reflection_prompts}</h2>
 
               <textarea
                 className="reflection-text"
@@ -89,12 +105,18 @@ const Reflection = () => {
             </div>
           ))
         )}
-
-        <button onClick={handleSubmit}>Submit</button>
-        <button onClick={fetchQuestions}>Change Prompts</button>
+        
+        <div className="reflection-buttons-container">
+        <button id="other-button" onClick={fetchQuestions}>Change Prompts</button>
+        <button id="other-button" onClick={handleSubmit}>Submit</button>
+        </div>
+        
         <button
+          id="history-button"
           onClick={() => navigate("/history")}
-        >View Past Reflections</button>
+        >
+            View Past Reflections
+        </button>
 
       </div>
     </>
