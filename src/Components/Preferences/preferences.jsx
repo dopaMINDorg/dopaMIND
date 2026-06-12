@@ -98,6 +98,7 @@ const Preferences = () => {
         <input 
           type="time"
           id="notification-time"
+          data-testid="notification-time-input"
           value={notifTime}
           onChange={(e) => setNotifTime(e.target.value)}
         />
