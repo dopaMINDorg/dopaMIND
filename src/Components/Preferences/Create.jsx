@@ -18,6 +18,17 @@ const Create = () => {
       setFormError('Please fill in all the fields correctly')
       return 
     }
+
+    const hours = Number(time_hours);
+    const minutes = Number(time_minutes);
+
+    if(hours < 0 || minutes < 0 || minutes >= 60 || hours > 24 || (hours === 0 && minutes === 0)) {
+      setFormError('Please enter valid Duration')
+      return;
+    }
+
+
+
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {

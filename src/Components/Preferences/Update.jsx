@@ -25,6 +25,14 @@ const Update = () => {
       return
     }
 
+    const hours = Number(time_hours);
+    const minutes = Number(time_minutes);
+
+    if(hours < 0 || minutes < 0 || minutes >= 60 || hours > 24 || (hours === 0 && minutes === 0)) {
+      setFormError('Please enter valid Duration')
+      return;
+    }
+
 
     const { data, error } = await supabase
       .from('Preferences')
@@ -85,7 +93,7 @@ const Update = () => {
         />
 
 
-        <button className="create-add-btn">Add a New Activity</button>
+        <button className="create-add-btn">Update Activity</button>
         {formError && <p className="create-error">{formError}</p>}  
       </form>
       </div>

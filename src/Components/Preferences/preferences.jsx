@@ -11,6 +11,7 @@ const Preferences = () => {
   const [prefs, setPrefs] = useState(null)
   const [notifTime, setNotifTime] = useState("00:00")
   const [formError, setFormError] = useState('')
+  const [loading, setLoading] = useState(true)
 
   const handleDelete = async (id) => {
     setPrefs(prevPrefs => {
@@ -51,11 +52,45 @@ const Preferences = () => {
       console.log(error)
       alert("unable to update time")
     } 
-    if (data){
-      setFormError(null) 
+    
+      setFormError(null)
+      alert(`Notification time updated to ${notifTime}`) 
       console.log(data)
-    }
+    
   }
+
+  const fetchNotifTime = async () => {
+    setLoading(true);
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      alert("User not logged in")
+      setLoading(false);
+      return
+    }
+
+    const { data, error } = await supabase
+    .from('Notification Time')
+    .select('notif_time')
+    .eq('id', user.id)
+    .single()
+
+  if (error) {
+    console.log(error)
+    return
+  }
+
+  if (data?.notif_time) {
+    const date = new Date(data.notif_time)
+
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+
+    setNotifTime(`${hours}:${minutes}`)
+  }
+
+  setLoading(false);
+}
+
 
   
   const fetchPreferences = async () => {
@@ -69,16 +104,30 @@ const Preferences = () => {
       console.log(error)
     }
 
-    if (data) {
+    
       console.log(data)
       setPrefs(data)
       setFetchError(null)
-    }
+    
   }
 
   useEffect(() => {
     fetchPreferences()
+    fetchNotifTime()
   }, [])
+
+  // helper function that formats 24hr time to am pm
+  const formatToAMPM = (time24) => {
+  if (!time24) {
+    return '';
+  }
+  const [hourStr, minute] = time24.split(':');
+  let hour = Number(hourStr);
+  const ampm = hour >= 12 ? 'PM' : 'AM'
+  hour = hour % 12
+  hour = hour ? hour : 12
+  return `${hour}:${minute} ${ampm}`
+}
 
 
 
@@ -121,6 +170,12 @@ const Preferences = () => {
             ))}
           </div>
         </div>
+      )}
+
+      {loading ? (
+        null
+      ) : (
+        <p>Current notification time: {formatToAMPM(notifTime)}</p>
       )}
     </>
   )
