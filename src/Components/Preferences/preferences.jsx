@@ -51,10 +51,11 @@ const Preferences = () => {
     if (error){
       console.log(error)
       alert("unable to update time")
+      return
     } 
     
       setFormError(null)
-      alert(`Notification time updated to ${notifTime}`) 
+      alert(`Notification time updated to ${formatToAMPM(notifTime)}`) 
       console.log(data)
     
   }
@@ -76,6 +77,7 @@ const Preferences = () => {
 
   if (error) {
     console.log(error)
+    setLoading(false)
     return
   }
 
@@ -102,6 +104,7 @@ const Preferences = () => {
       setFetchError('Could not fetch the preferences')
       setPrefs(null)
       console.log(error)
+      return
     }
 
     
