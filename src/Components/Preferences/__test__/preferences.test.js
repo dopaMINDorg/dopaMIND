@@ -1,8 +1,10 @@
-// // import { render, screen, fireEvent } from '@testing-library/react';
-// // import Preferences from '../preferences';
 import Home from '../../Home/Home';
 import { MemoryRouter, BrowserRouter, Routes, Route} from 'react-router-dom';
 import Create from '../Create';
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
+import Preferences from "./../preferences";
+import supabase from "../../../config/supabaseClient";
 
 const MockPreferences = () => {
     return(
@@ -16,16 +18,6 @@ const MockPreferences = () => {
        
     );
 }
-
-
-
-
-
-
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import userEvent from '@testing-library/user-event';
-import Preferences from "./../preferences";
-import supabase from "../../../config/supabaseClient";
 
 global.alert = jest.fn();
 
@@ -46,21 +38,15 @@ describe("Preferences component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // -------------------------
-    // DEFAULT AUTH MOCK
-    // -------------------------
+    
     mockSupabase.auth.getUser.mockResolvedValue({
       data: { user: { id: "123" } },
       error: null,
     });
 
-    // -------------------------
-    // DEFAULT SUPABASE MOCK
-    // -------------------------
+   
     mockSupabase.from.mockImplementation((table) => {
-      // -------------------------
-      // Preferences table
-      // -------------------------
+      
       if (table === "Preferences") {
         return {
           select: jest.fn().mockResolvedValue({
@@ -73,9 +59,7 @@ describe("Preferences component", () => {
         };
       }
 
-      // -------------------------
-      // Notification Time table
-      // -------------------------
+       
       if (table === "Notification Time") {
         return {
           // GET
@@ -90,11 +74,11 @@ describe("Preferences component", () => {
             })),
           })),
 
-          // UPDATE
+          
           update: jest.fn(() => ({
             eq: jest.fn(() => ({
               select: jest.fn().mockResolvedValue({
-                data: [{ notif_time: "2026-01-01T12:00:00Z" }],
+                data: [{ notif_time: "2026-01-01T12:00:00" }],
                 error: null,
               }),
             })),
@@ -109,7 +93,7 @@ describe("Preferences component", () => {
     });
   });
 
-  describe("Preferences page", () => {
+  
     test("shows alert when user is not logged in", async () => {
     mockSupabase.auth.getUser.mockResolvedValueOnce({
       data: { user: null },
@@ -175,7 +159,7 @@ describe("Preferences component", () => {
         await screen.findByText(/Could not fetch the preferences/i)
     ).toBeInTheDocument();
     });
-});
+
   
 
 
@@ -358,3 +342,4 @@ test("Current notification time(text) shows updated notif time", async () => {
 
 })
 });
+
