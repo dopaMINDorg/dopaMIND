@@ -2,17 +2,17 @@ import { MemoryRouter, BrowserRouter, Routes, Route} from 'react-router-dom';
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
 
-import Create from "../Create";
+import Update from "../Update";
 //import Preferences from "../preferences";
 
-const MockCreate = () => {
+const MockUpdate = () => {
     return(
             // Memory router uses a fake starting router like /preferences and no real route changes occur, 
             // BrowserRouter uses the actual windows URL and routes change, so we use MemoryRouter for testing mocked 
             // routes 
 
-            <MemoryRouter initialEntries={['/create']}>
-                <Create />
+            <MemoryRouter>
+                <Update />
             </MemoryRouter>
        
     );
@@ -32,6 +32,7 @@ jest.mock("../../../config/supabaseClient", () => ({
 import supabase from "../../../config/supabaseClient";
 const mockSupabase = supabase;
 
+global.alert = jest.fn();
 const mockNavigate = jest.fn();
 
 jest.mock("react-router-dom", () => ({
@@ -39,43 +40,57 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
 }));
 
-describe("Create Component", () => {
+describe("Update Component", () => {
+
+    beforeEach(() => {
+  jest.clearAllMocks();
+
+  mockSupabase.auth.getUser.mockResolvedValue({
+    data: {
+      user: {
+        id: "123",
+      },
+    },
+    error: null,
+  });
+});
+
 
 describe("input fields", () => {
 test("renders input with Activity placeholder", () => {
-    render(<MockCreate />);
+    render(<MockUpdate />);
     const placeholder = screen.getByPlaceholderText(/Activity:/i);
     expect(placeholder).toBeInTheDocument();
 });
 
 test("user can change Activity input", () => {
-    render(<MockCreate />);
+    render(<MockUpdate />);
     const placeholder = screen.getByPlaceholderText(/Activity:/i);
     fireEvent.change(placeholder, { target : { value : "swimming"} });
     expect(placeholder).toHaveValue("swimming");
 });
 
 test("renders input with Hours placeholder", () => {
-    render(<MockCreate />);
+    render(<MockUpdate />);
     const placeholder = screen.getByPlaceholderText(/Hours:/i);
     expect(placeholder).toBeInTheDocument();
 });
 
 test("user can change Hour input", () => {
-    render(<MockCreate />);
+    render(<MockUpdate />);
     const placeholder = screen.getByPlaceholderText(/Hours:/i);
     fireEvent.change(placeholder, { target : { value : 10} });
     expect(placeholder).toHaveValue(10);
 });
 
 test("renders input with Minutes placeholder", () => {
-    render(<MockCreate />);
+    render(<MockUpdate />);
     const placeholder = screen.getByPlaceholderText(/Minutes:/i);
     expect(placeholder).toBeInTheDocument();
 });
 
 test("user can change Minutes input", () => {
-    render(<MockCreate />);
+    render(<MockUpdate />);
     const placeholder = screen.getByPlaceholderText(/Minutes:/i);
     fireEvent.change(placeholder, { target : { value : 37} });
     expect(placeholder).toHaveValue(37);
@@ -84,23 +99,23 @@ test("user can change Minutes input", () => {
 });
 
 test("renders Add activity button", () => {
-    render(<MockCreate />);
-    const button = screen.getByRole("button", {name : /Add Activity/i });
+    render(<MockUpdate />);
+    const button = screen.getByRole("button", {name : /Update Activity/i });
     expect(button).toBeInTheDocument();
 });
 
 describe("error handling with invalid inputs", () => {
 
-test("shows error when empty fields are submitted", () => {
-    render(<MockCreate />);
-    const button = screen.getByRole("button", {name : /Add Activity/i });
+test("shows error when empty fields are submitted", async () => {
+    render(<MockUpdate />);
+    const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
-    const errorText = screen.getByText(/Please fill in all the fields correctly/i);
-    expect(errorText).toBeInTheDocument();
+    const errorText = screen.findByText(/Please enter valid Duration/i);
+    expect(await errorText).toBeInTheDocument();
 });
 
-test("shows error when duration is set to Ohr and 0min", () => {
-    render(<MockCreate />);
+test("shows error when duration is set to Ohr and 0min", async () => {
+    render(<MockUpdate />);
     const activity = screen.getByPlaceholderText(/Activity:/i);
     fireEvent.change(activity, { target : { value : "swimming"} });
     const hours = screen.getByPlaceholderText(/Hours:/i);
@@ -108,15 +123,15 @@ test("shows error when duration is set to Ohr and 0min", () => {
     const placeholder = screen.getByPlaceholderText(/Minutes:/i);
     fireEvent.change(placeholder, { target : { value : 0} });
     
-    const button = screen.getByRole("button", {name : /Add Activity/i });
+    const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
     
-    const errorText = screen.getByText(/Please enter valid Duration/i);
-    expect(errorText).toBeInTheDocument();
+    const errorText = screen.findByText(/Please enter valid Duration/i);
+    expect(await errorText).toBeInTheDocument();
 });
 
-test("shows error when minutes are negative", () => {
-    render(<MockCreate />);
+test("shows error when minutes are negative", async () => {
+    render(<MockUpdate />);
     const activity = screen.getByPlaceholderText(/Activity:/i);
     fireEvent.change(activity, { target : { value : "swimming"} });
     const hours = screen.getByPlaceholderText(/Hours:/i);
@@ -124,15 +139,15 @@ test("shows error when minutes are negative", () => {
     const placeholder = screen.getByPlaceholderText(/Minutes:/i);
     fireEvent.change(placeholder, { target : { value : -30} });
     
-    const button = screen.getByRole("button", {name : /Add Activity/i });
+    const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
     
-    const errorText = screen.getByText(/Please enter valid Duration/i);
-    expect(errorText).toBeInTheDocument();
+    const errorText = screen.findByText(/Please enter valid Duration/i);
+    expect(await errorText).toBeInTheDocument();
 });
 
-test("shows error when hours are negative", () => {
-    render(<MockCreate />);
+test("shows error when hours are negative", async () => {
+    render(<MockUpdate />);
     const activity = screen.getByPlaceholderText(/Activity:/i);
     fireEvent.change(activity, { target : { value : "swimming"} });
     const hours = screen.getByPlaceholderText(/Hours:/i);
@@ -140,15 +155,15 @@ test("shows error when hours are negative", () => {
     const placeholder = screen.getByPlaceholderText(/Minutes:/i);
     fireEvent.change(placeholder, { target : { value : 0} });
     
-    const button = screen.getByRole("button", {name : /Add Activity/i });
+    const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
     
-    const errorText = screen.getByText(/Please enter valid Duration/i);
-    expect(errorText).toBeInTheDocument();
+    const errorText = screen.findByText(/Please enter valid Duration/i);
+    expect(await errorText).toBeInTheDocument();
 });
 
-test("shows error when minutes are greater 59", () => {
-    render(<MockCreate />);
+test("shows error when minutes are greater 59", async () => {
+    render(<MockUpdate />);
     const activity = screen.getByPlaceholderText(/Activity:/i);
     fireEvent.change(activity, { target : { value : "swimming"} });
     const hours = screen.getByPlaceholderText(/Hours:/i);
@@ -156,15 +171,15 @@ test("shows error when minutes are greater 59", () => {
     const placeholder = screen.getByPlaceholderText(/Minutes:/i);
     fireEvent.change(placeholder, { target : { value : 60} });
     
-    const button = screen.getByRole("button", {name : /Add Activity/i });
+    const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
     
-    const errorText = screen.getByText(/Please enter valid Duration/i);
-    expect(errorText).toBeInTheDocument();
+    const errorText = screen.findByText(/Please enter valid Duration/i);
+    expect(await errorText).toBeInTheDocument();
 });
 
-test("shows error when hours are greater 24", () => {
-    render(<MockCreate />);
+test("shows error when hours are greater 24", async () => {
+    render(<MockUpdate />);
     const activity = screen.getByPlaceholderText(/Activity:/i);
     fireEvent.change(activity, { target : { value : "swimming"} });
     const hours = screen.getByPlaceholderText(/Hours:/i);
@@ -172,11 +187,11 @@ test("shows error when hours are greater 24", () => {
     const placeholder = screen.getByPlaceholderText(/Minutes:/i);
     fireEvent.change(placeholder, { target : { value : 0} });
     
-    const button = screen.getByRole("button", {name : /Add Activity/i });
+    const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
     
-    const errorText = screen.getByText(/Please enter valid Duration/i);
-    expect(errorText).toBeInTheDocument();
+    const errorText = screen.findByText(/Please enter valid Duration/i);
+    expect(await errorText).toBeInTheDocument();
 });
 
 });
@@ -187,7 +202,7 @@ test('shows auth error when no user is logged in', async () => {
     error: null,
   });
 
-  render(<MockCreate />);
+  render(<MockUpdate />);
 
   fireEvent.change(screen.getByPlaceholderText('Activity:'), {
     target: { value: 'Gym' },
@@ -202,108 +217,87 @@ test('shows auth error when no user is logged in', async () => {
   });
 
   fireEvent.click(
-    screen.getByRole('button', { name: /add activity/i })
+    screen.getByRole('button', { name: /Update activity/i })
   );
 
   await waitFor(() => {
-    expect(
-      screen.getByText('You must be logged in to save preferences.')
-    ).toBeInTheDocument()
+    expect(global.alert).toHaveBeenCalledWith("User not logged in");
   });
   jest.clearAllMocks();
 })
 
-test('creates preference successfully', async () => {
-  mockSupabase.auth.getUser.mockResolvedValue({
-    data: { user: { id: '123' } },
-    error: null,
-  })
 
-  const selectMock = jest.fn().mockResolvedValue({
-    data: [{ id: 1 }],
-    error: null,
-  })
-
-  const insertMock = jest.fn(() => ({
-    select: selectMock,
-  }))
-
+test("navigates to preferences on successful update", async () => {
   mockSupabase.from.mockReturnValue({
-    insert: insertMock,
-  })
-
-  render(<MockCreate />);
-
-  fireEvent.change(screen.getByPlaceholderText('Activity:'), {
-    target: { value: 'Swimming' },
-  })
-
-  fireEvent.change(screen.getByPlaceholderText('Hours:'), {
-    target: { value: '1' },
-  })
-
-  fireEvent.change(screen.getByPlaceholderText('Minutes:'), {
-    target: { value: '15' },
-  })
-
-  fireEvent.click(
-    screen.getByRole('button', { name: /add activity/i })
-  )
-
-  await waitFor(() => {
-    expect(insertMock).toHaveBeenCalledWith([
-      {
-        activity: 'Swimming',
-        time_hours: '1',
-        time_minutes: '15',
-        user_id: '123',
-      },
-    ])
-  })
-
-  jest.clearAllMocks();
-})
-
-test("navigates to preferences page after successful create", async () => {
-  mockSupabase.auth.getUser.mockResolvedValue({
-    data: { user: { id: "123" } },
-    error: null,
+    update: () => ({
+      eq: () => ({
+        select: () => ({
+          single: () =>
+            Promise.resolve({
+              data: { id: 1 },
+              error: null,
+            }),
+        }),
+      }),
+    }),
   });
 
-  const selectMock = jest.fn().mockResolvedValue({
-    data: [{ id: 1 }],
-    error: null,
+  render(<MockUpdate />);
+
+  fireEvent.change(screen.getByPlaceholderText(/Activity:/i), {
+    target: { value: "swimming" },
   });
 
-  const insertMock = jest.fn(() => ({
-    select: selectMock,
-  }));
-
-  mockSupabase.from.mockReturnValue({
-    insert: insertMock,
+  fireEvent.change(screen.getByPlaceholderText(/Hours:/i), {
+    target: { value: 1 },
   });
 
-  render(<MockCreate />);
-
-  fireEvent.change(screen.getByPlaceholderText(/activity:/i), {
-    target: { value: "Swimming" },
+  fireEvent.change(screen.getByPlaceholderText(/Minutes:/i), {
+    target: { value: 30 },
   });
 
-  fireEvent.change(screen.getByPlaceholderText(/hours:/i), {
-    target: { value: "1" },
-  });
-
-  fireEvent.change(screen.getByPlaceholderText(/minutes:/i), {
-    target: { value: "15" },
-  });
-
-  fireEvent.click(
-    screen.getByRole("button", { name: /add activity/i })
-  );
+  fireEvent.click(screen.getByRole("button", { name: /Update Activity/i }));
 
   await waitFor(() => {
     expect(mockNavigate).toHaveBeenCalledWith("/preferences");
   });
 });
+
+test("shows error when supabase update fails", async () => {
+  mockSupabase.from.mockReturnValue({
+    update: () => ({
+      eq: () => ({
+        select: () => ({
+          single: () =>
+            Promise.resolve({
+              data: null,
+              error: new Error("update failed"),
+            }),
+        }),
+      }),
+    }),
+  });
+
+  render(<MockUpdate />);
+
+  fireEvent.change(screen.getByPlaceholderText(/Activity:/i), {
+    target: { value: "swimming" },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText(/Hours:/i), {
+    target: { value: 1 },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText(/Minutes:/i), {
+    target: { value: 30 },
+  });
+
+  fireEvent.click(screen.getByRole("button", { name: /Update Activity/i }));
+
+  expect(
+    await screen.findByText(/Please fill in all the fields correctly/i)
+  ).toBeInTheDocument();
+});
+
 
 });
