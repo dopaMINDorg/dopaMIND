@@ -19,44 +19,48 @@ const Preferences = () => {
   }
   
   const handleNotifTime = async (e) => {
-    e.preventDefault()
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
+  e.preventDefault();
 
-    if (userError || !user) {
-      alert("User not logged in")
-      return
-    }
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
-    if(!notifTime){
-      setFormError('Please fill in all the fields correctly')
-      return 
-    }
-
-    const [hours, minutes] = notifTime.split(":")
-    const notifDate = new Date()
-    notifDate.setHours(hours)
-    notifDate.setMinutes(minutes)
-    notifDate.setSeconds(0)
-    notifDate.setMilliseconds(0)
-
-    const notif_time = notifDate.toISOString()
-
-    const { data, error } = await supabase 
-      .from('Notification Time')
-      .update({notif_time})
-      .eq('id', user.id)
-      .select()
-
-    if (error){
-      console.log(error)
-      alert("unable to update time")
-    } 
-    if (data){
-      setFormError(null) 
-      console.log(data)
-    }
+  if (userError || !user) {
+    alert("User not logged in");
+    return;
   }
 
+  if (!notifTime) {
+    setFormError("Please fill in all the fields correctly");
+    return;
+  }
+
+  const [hours, minutes] = notifTime.split(":");
+
+  const pendingDate = new Date();
+  pendingDate.setHours(Number(hours));
+  pendingDate.setMinutes(Number(minutes));
+  pendingDate.setSeconds(0);
+  pendingDate.setMilliseconds(0);
+
+  const pending_notif_time = pendingDate.toISOString();
+
+  const { data, error } = await supabase
+    .from("Notification Time")
+    .update({ pending_notif_time })
+    .eq("id", user.id)
+    .select();
+
+  if (error) {
+    console.error(error);
+    alert("Unable to update time");
+    return;
+  }
+
+  setFormError(null);
+  console.log(data);
+};
   
   const fetchPreferences = async () => {
     const { data, error } = await supabase

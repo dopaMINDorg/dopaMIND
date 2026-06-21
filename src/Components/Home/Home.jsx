@@ -3,13 +3,68 @@ import PreferenceIcon from '@mui/icons-material/Settings';
 import WeeklyIcon from '@mui/icons-material/EventNote';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ReflectionIcon from '@mui/icons-material/Notes';
-import Calendar from "./Calendar";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import supabase from "../../config/supabaseClient";
+import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar'
+import format from 'date-fns/format'
+import parse from 'date-fns/parse'
+import startOfWeek from 'date-fns/startOfWeek'
+import getDay from 'date-fns/getDay'
+import enUS from 'date-fns/locale/en-US'
 
+const locales = {
+  'en-US': enUS,
+}
 
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+})
 
 const Home = () => {
     const navigate = useNavigate();
+    const [events, setEvents] = useState([])
+
+    useEffect(() => {
+    const fetchEvents = async () => {
+
+    const { data, error } = await supabase
+      .from("events")
+      .select("*")
+
+    if (error) {
+      console.error("Fetch error:", error)
+      return
+    }
+
+    const formattedEvents = data.map(event => ({
+      id: event.id,
+      title: event.title,
+      start: new Date(event.start_time),
+      end: new Date(event.end_time),
+      tags: event.tags 
+    }))
+
+        console.log("Fetched events:", formattedEvents)
+
+        setEvents(formattedEvents)
+      }
+
+      fetchEvents()
+    }, [])
+    const CustomToolbar = (toolbar) => {
+      return (
+        <div className="rbc-toolbar">
+          <span className="rbc-toolbar-label" style={{ fontSize: '25px', fontWeight: 'bold' }}>
+            {toolbar.label}
+          </span>
+        </div>
+      );
+    };
 
     return(
         <>
@@ -19,7 +74,18 @@ const Home = () => {
         <div className="welcome-msg">Welcome Home</div>
         <div className="wrapper">
             <div className="box">   
-                <Calendar />
+                <Calendar
+                    localizer={localizer}
+                    events={events}
+                    startAccessor="start"
+                    endAccessor="end"
+                    style={{ height: 500 }}
+                    views={['month']} 
+                    defaultView={Views.MONTH}
+                    components={{
+                        toolbar: CustomToolbar, 
+                      }}
+                    />
             </div>
             <div className="box">
                 <div className ="events-container">

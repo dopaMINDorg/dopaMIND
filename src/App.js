@@ -1,37 +1,148 @@
-import {BrowserRouter, Routes, Route} from "react-router-dom";
-import './App.css';
-import LoginSignUp from './Components/LoginSignUp/LoginSignUp';
-import Home from './Components/Home/Home';
+import { useState, useEffect } from "react";
+import "./App.css";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"; 
+
+import LoginSignUp from "./Components/LoginSignUp/LoginSignUp";
+import Home from "./Components/Home/Home";
 import WeeklySpread from "./Components/WeeklySpread/weeklyspread.jsx";
 import Reflection from "./Components/Reflection/reflection.jsx";
 import Logout from "./Components/Logout/logout.jsx";
-import Preferences from "./Components/Preferences/preferences.jsx"
-import Create from "./Components/Preferences/Create.jsx"
-import Update from "./Components/Preferences/Update.jsx"
-/* i think it has to have .jsx at the end for vercel*/
+import Preferences from "./Components/Preferences/preferences.jsx";
+import Create from "./Components/Preferences/Create.jsx";
+import Update from "./Components/Preferences/Update.jsx";
 
+import { ModeProvider } from "./Context/ModeContext.jsx";
+import ProtectedRoute from "./Components/ProtectedRoute.jsx";
+
+import supabase from "./config/supabaseClient";
 
 function App() {
-  return (
-    
-    <BrowserRouter>
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<LoginSignUp />} />
-        <Route path="/login-sign-up" element={<LoginSignUp />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/weekly-spread" element={<WeeklySpread />} />
-        <Route path="/reflection" element={<Reflection />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/preferences" element={<Preferences />}/>
-        <Route path="/create" element={<Create />} />
-        <Route path="/:id" element={<Update />} />
-        <Route path="*" element={<div> Not Found</div>} />
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-      </Routes>
-      </div>
-    </BrowserRouter>
-    
+  useEffect(() => {
+    const getSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      setSession(session);
+      setLoading(false);
+    };
+
+    getSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <ModeProvider>
+      <BrowserRouter>
+        <div className="App">
+          <Routes>
+
+            {/* Login Routes */}
+            <Route
+              path="/"
+              element={
+                session ? (
+                  <Navigate to="/home" replace />
+                ) : (
+                  <LoginSignUp />
+                )
+              }
+            />
+
+            <Route
+              path="/login-sign-up"
+              element={
+                session ? (
+                  <Navigate to="/home" replace />
+                ) : (
+                  <LoginSignUp />
+                )
+              }
+            />
+
+            {/* Protected Routes */}
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute session={session}>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/weekly-spread"
+              element={
+                <ProtectedRoute session={session}>
+                  <WeeklySpread />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/reflection"
+              element={
+                <ProtectedRoute session={session}>
+                  <Reflection />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/logout"
+              element={
+                <ProtectedRoute session={session}>
+                  <Logout />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/preferences"
+              element={
+                <ProtectedRoute session={session}>
+                  <Preferences />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/create"
+              element={
+                <ProtectedRoute session={session}>
+                  <Create />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/:id"
+              element={
+                <ProtectedRoute session={session}>
+                  <Update />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="*" element={<div>Not Found</div>} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </ModeProvider>
   );
 }
 
