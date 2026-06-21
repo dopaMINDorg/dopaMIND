@@ -20,13 +20,12 @@ const Preferences = () => {
   }
   
   const handleNotifTime = async (e) => {
-    e.preventDefault()
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
+  e.preventDefault();
 
-    if (userError || !user) {
-      alert("User not logged in")
-      return
-    }
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
     if(!notifTime){
       setFormError('Please fill in all the fields correctly')

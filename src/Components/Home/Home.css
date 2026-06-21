@@ -171,3 +171,34 @@
     margin-top: 10px;
     margin-bottom: 20px;
 }
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 20px; 
+    box-sizing: border-box;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    width: 100%;
+    margin-top: 10px; 
+}
+.icon-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 10px;
+    
+    /* Remove the hardcoded auto margins that break layouts */
+    margin: 25px 0 0 20px; 
+    max-width: 1200px;
+    
+    /* Forces it to stay below the calendar structure naturally */
+    clear: both; 
+}
