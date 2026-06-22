@@ -27,6 +27,12 @@ const Preferences = () => {
     error: userError,
   } = await supabase.auth.getUser();
 
+   if (userError || !user) {
+      alert("User not logged in")
+      setLoading(false);
+      return
+    }
+
     if(!notifTime){
       setFormError('Please fill in all the fields correctly')
       return 

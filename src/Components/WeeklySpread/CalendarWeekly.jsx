@@ -37,7 +37,7 @@ export default function CalendarApp () {
   const [draftEvent, setDraftEvent] = useState(null)
   const [isOpenEvent, setIsOpenEvent] = useState(false)
 
-  const { mode, toggleMode } = useMode();
+  const { mode /*, toggleMode*/} = useMode();
 
   const currentTag = mode === "relax" ? "relax" : "focus";
 

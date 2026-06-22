@@ -10,7 +10,7 @@ const Reflection = () => {
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
     const [loading, setLoading] = useState(false);
-    const [userError, setUserError] = useState(false); // these are errors that users need to handle, not system errors
+    //const [userError, setUserError] = useState(false); // these are errors that users need to handle, not system errors
 
     const fetchQuestions = async () => {
         setLoading(true);
@@ -40,12 +40,12 @@ const Reflection = () => {
     const hasEmptyAnswer = questions.some((q) => !answers[q.id]?.trim());
 
     if(hasEmptyAnswer) {
-        setUserError(true);
+        //setUserError(true);
         alert("Please answer all questions before submitting.");
         return;
     }
 
-    setUserError(false);
+    //setUserError(false);
 
     const {
       data: { user },

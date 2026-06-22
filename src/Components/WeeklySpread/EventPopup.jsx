@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useMode } from "../../Context/ModeContext"
 import supabase from "../../config/supabaseClient"
 import "./EventPopup.css"
@@ -27,7 +27,7 @@ export default function EventPopup({
     ? Math.floor((new Date(draftEvent.end) - new Date(draftEvent.start)) / 60000)
     : 0;
 
-  const fetchPreferences = async () => {
+  const fetchPreferences = useCallback(async () => {
     const { data, error } = await supabase
       .from('Preferences')
       .select()
@@ -58,14 +58,14 @@ export default function EventPopup({
         }));
       }
     }
-  }
+  });
 
   
   useEffect(() => {
     if (mode === "relax" && isOpen) {
       fetchPreferences()
     }
-  }, [mode, isOpen]) 
+  }, [mode, isOpen, fetchPreferences]) 
 
   useEffect(() => {
   if (isOpen && draftEvent) {
@@ -78,16 +78,16 @@ export default function EventPopup({
   }
 }, [isOpen, draftEvent?.id]);
 
-  useEffect(() => {
-    if (draftEvent) {
-      setForm({
-        id: draftEvent.id || null,
-        title: draftEvent.title || "",
-        start: new Date(draftEvent.start),
-        end: new Date(draftEvent.end),
-      })
-    }
-  }, [draftEvent])
+  // useEffect(() => {
+  //   if (draftEvent) {
+  //     setForm({
+  //       id: draftEvent.id || null,
+  //       title: draftEvent.title || "",
+  //       start: new Date(draftEvent.start),
+  //       end: new Date(draftEvent.end),
+  //     })
+  //   }
+  // }, [draftEvent])
 
   if (!isOpen) return null
 
