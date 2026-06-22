@@ -58,7 +58,7 @@ export default function EventPopup({
         }));
       }
     }
-  });
+  }, [slotDurationInMinutes, draftEvent?.id, form.id]);
 
   
   useEffect(() => {
@@ -76,7 +76,7 @@ export default function EventPopup({
       end: new Date(draftEvent.end),
     });
   }
-}, [isOpen, draftEvent?.id]);
+}, [isOpen, draftEvent]);
 
   // useEffect(() => {
   //   if (draftEvent) {
