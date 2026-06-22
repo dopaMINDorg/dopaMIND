@@ -1,4 +1,4 @@
-import Home from '../../Home/Home';
+//import Home from '../../Home/Home';
 import { MemoryRouter, BrowserRouter, Routes, Route} from 'react-router-dom';
 import Create from '../Create';
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
@@ -21,6 +21,7 @@ const MockPreferences = () => {
 
 global.alert = jest.fn();
 
+
 // Mock supabase module
 jest.mock("../../../config/supabaseClient", () => ({
   __esModule: true,
@@ -33,6 +34,11 @@ jest.mock("../../../config/supabaseClient", () => ({
 }));
 
 const mockSupabase = supabase;
+const mockNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockNavigate,
+}));
 
 describe("Preferences component", () => {
   beforeEach(() => {
@@ -172,20 +178,12 @@ describe('Home Button', () => {
     expect(buttonElement).toBeInTheDocument();
     });
 
-    test('Home buttom leads to Home page(mocked)', async () =>  {
-    render(
-        <MemoryRouter initialEntries={['/preferences']}>
-            <Routes>
-                <Route path="/preferences" element={<Preferences />}/>
-                <Route path="/home" element={<Home />} />
-            </Routes>
-        </MemoryRouter> 
-    );
-    expect(screen.getByText(/Set Your Preferences/i)).toBeInTheDocument();
-    const buttonElement = screen.getByTitle(/Home/i);
-    fireEvent.click(buttonElement);
-    expect(await screen.findByText(/Welcome Home/i)).toBeInTheDocument();
-    });
+  test("navigates to home", async () => {
+  render(<MockPreferences/>);
+  const button = await screen.findByTitle("Home");
+  fireEvent.click(button);
+  expect(mockNavigate).toHaveBeenCalledWith("/home");
+});
 });
 
 
@@ -196,19 +194,12 @@ describe('Create Button', () => {
     expect(buttonElement).toBeInTheDocument();
     });
     test('Create buttom leads to Create page(mocked)', async () =>  {
-    render(
-        <MemoryRouter initialEntries={['/preferences']}>
-            <Routes>
-                <Route path="/preferences" element={<Preferences />}/>
-                <Route path="/create" element={<Create />} />
-            </Routes>
-        </MemoryRouter> 
-    );
-    expect(screen.getByText(/Set Your Preferences/i)).toBeInTheDocument();
-    const buttonElement = screen.getByRole("button", { name : /CREATE/i });
-    fireEvent.click(buttonElement);
-    expect(await screen.findByText(/Create Preferences/i)).toBeInTheDocument();
-    });
+      render(<MockPreferences/>);
+ const button = screen.getByRole("button", { name : /CREATE/i });
+  fireEvent.click(button);
+  expect(mockNavigate).toHaveBeenCalledWith("/create");
+});
+   
 });
 
 describe('Set Time Preference', () => {

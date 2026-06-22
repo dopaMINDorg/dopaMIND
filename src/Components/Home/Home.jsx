@@ -90,13 +90,13 @@ const Home = () => {
             <div className="box">
                 <div className ="events-container">
                     <div className="reminder-container"> 
-                        <h2 id="text">Reminders</h2>
-                        <p>No Reminders Avaliable</p>
+                        <h2 id="text">Current Points</h2>
+                        <p>Game stats</p>
                         
                     </div>
                     <div className="event-container">
-                        <h2 id="text">Events</h2>
-                        <p>No Events Avaliable</p>
+                        <h2 id="text">Na</h2>
+                        <p>More features coming soon</p>
                     </div>
                 </div>
             </div>

@@ -164,15 +164,15 @@ const LoginSignUp = () => {
 
   return (
     <>
-    <img src={Logo} alt="" id="logo"/>
+    <img src={Logo} alt="DopaMIND" id="logo"/>
     <div className="login-container">
         <div className="login-header">
             <div className="text">{action}</div>
             <div className="underline"></div>
         </div>
         <div className="action-container">
-          <div className={action==="Login"?"action gray":"action"} onClick={()=>{setAction("Sign Up")}}>Sign Up</div>
-          <div className={action==="Sign Up"?"action gray":"action"} onClick={()=>{setAction("Login")}}>Login</div>
+          <div data-testid="SignUp" className={action==="Login"?"action gray":"action"} onClick={()=>{setAction("Sign Up")}}>Sign Up</div>
+          <div data-testid="Login" className={action==="Sign Up"?"action gray":"action"} onClick={()=>{setAction("Login")}}>Login</div>
         </div>
         <div className="login-inputs">
             {/* 2. Conditionally render the Name input only during Sign Up */}
