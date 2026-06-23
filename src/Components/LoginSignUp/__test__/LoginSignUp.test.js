@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import LoginSignUp from "../LoginSignUp"
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import supabase from "../../../config/supabaseClient";
 
 const mockNavigate = jest.fn();
@@ -117,7 +117,8 @@ test("navigates to home upon successful login", async () => {
   });
 
   await waitFor(() => {
-    expect(global.alert).toHaveBeenCalledWith("Login successful!");
+    expect(global.alert).toHaveBeenCalledWith("Login successful!"); });
+  await waitFor(() => {
     expect(mockNavigate).toHaveBeenCalledWith("/home");
   });
 });

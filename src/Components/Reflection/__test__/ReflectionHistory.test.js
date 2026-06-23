@@ -1,7 +1,7 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import ReflectionHistory from "../ReflectionHistory";
 import supabase from "../../../config/supabaseClient";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
+import {MemoryRouter } from "react-router-dom";
 
 const mockNavigate = jest.fn();
 

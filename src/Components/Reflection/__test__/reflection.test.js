@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Reflection from "../reflection";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
-
+import { MemoryRouter } from "react-router-dom";
+import supabase from "../../../config/supabaseClient";
 jest.mock("../../../config/supabaseClient", () => ({
   __esModule: true,
   default: {
@@ -14,7 +14,7 @@ jest.mock("../../../config/supabaseClient", () => ({
   },
 }));
 
-import supabase from "../../../config/supabaseClient";
+
 const mockSupabase = supabase;
 const mockNavigate = jest.fn();
 
@@ -52,7 +52,7 @@ beforeEach(() => {
 });
 
 test("shows loading initially", () => {
-  supabase.rpc.mockResolvedValue({
+  mockSupabase.rpc.mockResolvedValue({
     data: [],
     error: null,
   });
@@ -62,7 +62,7 @@ test("shows loading initially", () => {
 });
 
 test("renders questions and textboxes", async () => {
-  supabase.rpc.mockResolvedValue({
+  mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
@@ -76,7 +76,7 @@ test("renders questions and textboxes", async () => {
 });
 
 test("updates textarea input correctly", async () => {
-  supabase.rpc.mockResolvedValue({
+  mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
@@ -91,7 +91,7 @@ test("updates textarea input correctly", async () => {
 
 test("shows alert if both answers are empty", async () => {
   window.alert = jest.fn();
-  supabase.rpc.mockResolvedValue({
+  mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
@@ -106,7 +106,7 @@ test("shows alert if both answers are empty", async () => {
 
 test("shows alert if 1 answer is empty", async () => {
   window.alert = jest.fn();
-  supabase.rpc.mockResolvedValue({
+  mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
@@ -125,7 +125,7 @@ test("shows alert if 1 answer is empty", async () => {
 describe("submit", () => {
 
 test("renders submit button", () => {
-supabase.rpc.mockResolvedValue({
+mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
@@ -136,15 +136,15 @@ supabase.rpc.mockResolvedValue({
 
 test("successfully submits answers", async () => {
   //window.alert = jest.fn();
-  supabase.rpc.mockResolvedValue({
+  mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
-  supabase.auth.getUser.mockResolvedValue({
+  mockSupabase.auth.getUser.mockResolvedValue({
     data: { user: { id: "user-123" } },
   });
   const insertMock = jest.fn().mockResolvedValue({ error: null });
-  supabase.from.mockReturnValue({
+  mockSupabase.from.mockReturnValue({
     insert: insertMock,
   });
 
@@ -167,12 +167,12 @@ test("successfully submits answers", async () => {
 });
 
 test("clears answers after successful submit", async () => {
-  supabase.rpc.mockResolvedValue({
+  mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
 
-  supabase.auth.getUser.mockResolvedValue({
+  mockSupabase.auth.getUser.mockResolvedValue({
     data: {
       user: { id: "123" },
     },
@@ -182,7 +182,7 @@ test("clears answers after successful submit", async () => {
     error: null,
   });
 
-  supabase.from.mockReturnValue({
+  mockSupabase.from.mockReturnValue({
     insert: insertMock,
   });
 
@@ -216,7 +216,7 @@ test("clears answers after successful submit", async () => {
 
 describe("home", () => {
 test("render home button", async () => {
-    supabase.rpc.mockResolvedValue({
+    mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
@@ -226,7 +226,7 @@ test("render home button", async () => {
 });
 
 test("navigates to home", async () => {
-  supabase.rpc.mockResolvedValue({
+  mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
@@ -242,7 +242,7 @@ test("navigates to home", async () => {
 describe("Past Reflection", () => {
 
 test("render Past Reflections button", async () => {
-    supabase.rpc.mockResolvedValue({
+    mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
@@ -252,7 +252,7 @@ test("render Past Reflections button", async () => {
 });
 
 test("navigates to Past Reflections page", async () => {
-  supabase.rpc.mockResolvedValue({
+  mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
@@ -266,7 +266,7 @@ test("navigates to Past Reflections page", async () => {
 
 describe("Change Prompts", () =>{
 test("render Change Prompts button", async () => {
-    supabase.rpc.mockResolvedValue({
+    mockSupabase.rpc.mockResolvedValue({
     data: mockQuestions,
     error: null,
   });
@@ -277,7 +277,7 @@ test("render Change Prompts button", async () => {
 
 
 test("change prompts fetches new questions", async () => {
-  supabase.rpc
+  mockSupabase.rpc
     .mockResolvedValueOnce({
       data: [{ id: 1, reflection_prompts: "Old Question" }],
       error: null,
@@ -294,7 +294,7 @@ test("change prompts fetches new questions", async () => {
 });
 
 test("clears textboxes when Change Prompts is clicked", async () => {
-  supabase.rpc
+  mockSupabase.rpc
     .mockResolvedValueOnce({
       data: mockQuestions,
       error: null,
