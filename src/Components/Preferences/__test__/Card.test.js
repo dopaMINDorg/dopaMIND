@@ -1,7 +1,7 @@
-import { MemoryRouter, BrowserRouter, Routes, Route} from 'react-router-dom';
+import { MemoryRouter} from 'react-router-dom';
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import userEvent from '@testing-library/user-event';
-
+//import userEvent from '@testing-library/user-event';
+import supabase from "../../../config/supabaseClient";
 import PreferenceCard from "../Card";
 
 
@@ -15,7 +15,7 @@ jest.mock("../../../config/supabaseClient", () => ({
   },
 }));
 
-import supabase from "../../../config/supabaseClient";
+
 const mockSupabase = supabase;
 const mockNavigate = jest.fn();
 
