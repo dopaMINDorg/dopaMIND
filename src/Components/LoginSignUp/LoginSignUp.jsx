@@ -140,7 +140,8 @@ const LoginSignUp = () => {
       }
       if (data) {
         console.log(data)
-        alert("Sign up successful! Please Login to continue.")
+        alert(/*"Sign up successful! Please Login to continue."*/
+          "Account created Successfully! Welcome home!")
         // Reset action to Login so they can immediately sign in
         setAction("Login") 
       }
