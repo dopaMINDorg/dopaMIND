@@ -12,10 +12,8 @@ import "./Card.css"
             console.log(error)
         }
 
-        if (data) {
-            console.log(data)
-            onDelete(pref.id)
-        }
+        console.log(data)
+        onDelete(pref.id)
      }
         
     return (

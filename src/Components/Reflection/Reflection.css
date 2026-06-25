@@ -1,57 +1,45 @@
 .reflection-header-container {
   display: flex;
   align-items: center;
-  margin-top: 5px;
+  margin-top: 1rem;
+  padding: 1rem;
 }
 
 .reflection-header {
   flex: 1;
   font-family: "Cooper Black", sans-serif;
   font-size: 40px;
-  margin-bottom: 20px;
-  max-width: 1200px;
-  margin-left: 20px;
   align-items: center;
   color: #364a61;
 }
 
-.reflection {
-  margin-right: 20px;
-}
 
 
-.question1-container,
-.question2-container {
+.question-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  min-height: 220px;
-  padding-top: 5px;
-  padding-bottom: 10px;
-  box-sizing: border-box;
-
-  border-radius: 20px;
-  margin-bottom: 10px;
+  gap: 10px;
 }
 
-.question1-container {
-  background-color: #efe6d2;
-  border: 2px dotted #fff8d8;
-}
 
-.question2-container {
-  background-color: #fff8d8;
-  border: 2px dotted #efe6d2;
+#question {
+  font-family: "Cooper Black", sans-serif;
+  color: #364a61;
+  font-size: 30px;
 }
-
 
 .reflection-container {
+  background-color: #efe6d2;
+  border: 2px dotted #fff8d8;
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  margin: 0 20px 5px 20px;
+  padding: 2rem;
+  margin-left: 2rem;
+  margin-right: 2rem; 
+  margin-bottom: 2rem;
+  border-radius: 10px;
 }
 
 
@@ -67,6 +55,47 @@
   resize: none;
 
   font-family: "Cooper Black", sans-serif;
+  font-size: 18px;
   color: #364a61;
   background-color: #f9f9f9;
+}
+
+.reflection-buttons-container{
+  display: flex;
+  justify-content: center;  
+  align-items: center;      
+  gap: 12px;                
+  margin-top: 20px;
+}
+
+#history-button {
+  font-family: "Cooper Black", sans-serif;
+  padding: 10px 20px;
+  border-radius: 10px;
+  width: 20rem;
+  height: 3rem;
+  font-size: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #668db8;
+  color: #fff8d8;
+  border: 2px dotted #364a61;
+
+}
+
+#other-button {
+  font-family: "Cooper Black", sans-serif;
+  padding: 10px 20px;
+  border-radius: 10px;
+  width: 20rem;
+  height: 3rem;
+  font-size: 20px;
+  background-color: #668db8;
+  color: #fff8d8;
+  border: 2px dotted #364a61;
+
+}
+#history-button:hover, #other-button:hover {
+  background-color: #364a61;
+  color: #fff8d8;
 }

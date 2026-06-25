@@ -1,89 +1,3 @@
-/* these api classes are risky across devices - may have diff layouts*/
-
-
-.css-6mw38q-MuiTypography-root {
-    display: none !important;
-
-}
-
-.css-1uent87-MuiButtonBase-root-MuiButton-root {
-    display:none !important; 
-}
-
-.css-1xiumhb-MuiPickersLayout-root { 
-    width: 90% !important;
-    height: 110% !important;
-    border-radius: 50px !important;
-    background-color: #668db8 !important;
-    margin-bottom: 5px !important;
-    margin-left: 20px !important;
-    border:#364a61 2px dotted !important;    
-}
-
-
-
-.css-5wchs2-MuiDateCalendar-root {
-    background-color: #668db8 !important;
-    border-radius: 50px !important;
-    margin-top: 0px !important;
-    height: 100% !important;
-    font-family: cooper black, sans-serif !important;
-    color: green !important;
-} 
-
-.css-cyfsxc-MuiPickersCalendarHeader-labelContainer {
-    background-color: #c7ddef !important;
-    padding: 5px 20px !important;
-    border-radius: 50px !important;
-    margin-top: 0px !important;
-    height: 100% !important;
-    font-family: cooper black, sans-serif !important;
-    color: #364a61 !important;
-}
-
-.css-1mvmid-MuiYearCalendar-button {
-    color: #fff8d8 !important;
-    font-family: cooper black, sans-serif !important;
-    font-size: 20px !important;
-}
-
-.css-17f9e7e-MuiTypography-root-MuiDayCalendar-weekDayLabel {
-    color: #fff8d8 !important;
-    font-family: cooper black, sans-serif !important;
-    font-size: 20px !important;
-}
-
-.css-5ii697-MuiButtonBase-root-MuiPickerDay-root {
-    color: #533a33 !important;
-    font-family: cooper black, sans-serif !important;
-    font-size: 20px !important;
-}
-
-.css-zwi8lm-MuiButtonBase-root-MuiPickerDay-root:hover {
-  font-family: cooper black, sans-serif !important;
-  color:#fff8d8 !important;
-  background-color: #364a61 !important;
-}
-
-.css-1mvmid-MuiYearCalendar-button:hover {
-    color: #364a61 !important;
-    font-family: cooper black, sans-serif !important;
-    font-size: 20px !important;
-}
-
-.css-1vqg2do-MuiButtonBase-root-MuiPickerDay-root {
-    color: #fff8d8 !important;
-    font-family: cooper black, sans-serif !important;
-    font-size: 20px !important;
-    background-color: #364a61 !important;
-    border-radius: 50px !important;
-}
-
-.css-1s3y67t-MuiTypography-root-MuiDatePickerToolbar-title {
-    color: #364a61 !important;
-    font-family: cooper black, sans-serif !important;
-    font-size: 50px !important;
-}
 
 .wrapper {
     display: flex;
@@ -131,6 +45,7 @@
     border-radius: 20px;
     padding: 20px;
     box-sizing: border-box;
+    
 }
     
 
@@ -142,6 +57,7 @@
 .event-container {
     background-color: #fff8d8;
     border: 2px dotted #efe6d2;
+    visibility: hidden;
 }
 
 .events-container {
@@ -170,4 +86,35 @@
 
     margin-top: 10px;
     margin-bottom: 20px;
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 20px; 
+    box-sizing: border-box;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    width: 100%;
+    margin-top: 10px; 
+}
+.icon-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 10px;
+    
+    /* Remove the hardcoded auto margins that break layouts */
+    margin: 25px 0 0 20px; 
+    max-width: 1200px;
+    margin-top: 7rem;
+    /* Forces it to stay below the calendar structure naturally */
+    clear: both; 
 }
