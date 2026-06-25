@@ -150,6 +150,8 @@ test("shows alert on login failure", async () => {
   expect(mockNavigate).not.toHaveBeenCalled();
 });
 
+
+/// this test is iffy i deleted in the docs
 test("signs up successfully and switches to login mode", async () => {
   supabase.auth.signUp.mockResolvedValue({
     data: { user: { id: "1" } },
@@ -185,7 +187,7 @@ test("signs up successfully and switches to login mode", async () => {
   });
 
   expect(global.alert).toHaveBeenCalledWith(
-    "Sign up successful! Please Login to continue."
+    "Account created Successfully! Welcome home!"
   );
 
   //should switch to Login mode
