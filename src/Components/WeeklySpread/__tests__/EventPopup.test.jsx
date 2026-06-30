@@ -109,9 +109,7 @@ describe("EventPopup", () => {
   })
 
 
-  // =========================
-  // RELAX MODE DROPDOWN
-  // =========================
+
   describe("relax mode dropdown", () =>{
     test("shows preference dropdown in relax mode", async () => {
     useMode.mockReturnValue({ mode: "relax" });
