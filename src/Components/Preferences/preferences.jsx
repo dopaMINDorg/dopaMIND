@@ -4,9 +4,11 @@ import PreferenceCard from "./Card"
 import { useNavigate } from 'react-router-dom'
 import HomeIcon from '@mui/icons-material/HomeFilled';
 import "./preferences.css"
+import Popup from './popup'
 
 const Preferences = () => {
   const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(false);
   const [fetchError, setFetchError] = useState(null)
   const [prefs, setPrefs] = useState(null)
   const [notifTime, setNotifTime] = useState("00:00")
@@ -163,6 +165,12 @@ const Preferences = () => {
       </form>
       {formError && <p>{formError}</p>}
       <button className="create-button" onClick={() => navigate("/create")}>CREATE</button>
+      <div>
+      <button className="popup-button" onClick={() => setShowPopup(true)}>Need Help?</button>
+       {showPopup && (
+        <Popup onClose={() => setShowPopup(false)} />
+      )} 
+      </div>    
       </div>
 
 
