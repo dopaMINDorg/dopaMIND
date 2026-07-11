@@ -157,6 +157,11 @@ const LoginSignUp = () => {
       }
       if (data){
         console.log(data)
+    
+        const session = await supabase.auth.getSession();
+        console.log("Access token:", data.session?.access_token); //needed for testing ai feature
+        
+
         alert("Login successful!")
         navigate("/home")
       }

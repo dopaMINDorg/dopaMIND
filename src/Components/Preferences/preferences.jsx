@@ -15,6 +15,49 @@ const Preferences = () => {
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(true)
 
+  const generatePreferences = async (prompt) => {
+    try {
+      setLoading(true);
+      console.log("1. Starting AI generation");
+    console.log("Prompt:", prompt);
+      console.log("Sending to Edge Function:", prompt);
+
+      const { data: sessionData } = await supabase.auth.getSession();
+
+    const session = sessionData.session;
+
+    console.log("Session:", session);
+
+
+      const { data, error } = await supabase.functions.invoke(
+        "generate-preferences",
+        {
+    body: {
+      prompt,
+    },
+    headers: {
+      Authorization: `Bearer ${session.access_token}`,
+    },
+  }
+);
+       console.log("3. Edge function returned");
+
+    console.log("AI response:", data);
+    console.log("AI error:", error);
+
+      if (error) {
+        throw error;
+      }
+      console.log("AI response:", data);
+      await fetchPreferences();
+      setShowPopup(false);
+    } catch (error) {
+      console.error("Generate failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async (id) => {
     setPrefs(prevPrefs => {
       return prevPrefs.filter(pr => pr.id !== id)
@@ -168,7 +211,10 @@ const Preferences = () => {
       <div>
       <button className="popup-button" onClick={() => setShowPopup(true)}>Need Help?</button>
        {showPopup && (
-        <Popup onClose={() => setShowPopup(false)} />
+        <Popup 
+        onClose={() => setShowPopup(false)}
+        onGenerate={generatePreferences}
+        loading={loading} />
       )} 
       </div>    
       </div>
