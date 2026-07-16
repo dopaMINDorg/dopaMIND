@@ -28,17 +28,31 @@ const localizer = dateFnsLocalizer({
 const Home = () => {
     const navigate = useNavigate();
     const [events, setEvents] = useState([])
+    const [points, setPoints] = useState(null)
 
     useEffect(() => {
-    const fetchEvents = async () => {
-
+  const fetchPoints = async () => {
     const { data, error } = await supabase
-      .from("events")
-      .select("*")
+      .from("points")
+      .select("points")
+      .single();
 
     if (error) {
-      console.error("Fetch error:", error)
-      return
+      console.error("Error fetching points:", error);
+      return;
+    }
+
+    setPoints(data.points);
+  };
+
+  const fetchEvents = async () => {
+    const { data, error } = await supabase
+      .from("events")
+      .select("*");
+
+    if (error) {
+      console.error("Fetch error:", error);
+      return;
     }
 
     const formattedEvents = data.map(event => ({
@@ -46,16 +60,21 @@ const Home = () => {
       title: event.title,
       start: new Date(event.start_time),
       end: new Date(event.end_time),
-      tags: event.tags 
-    }))
+      tags: event.tags,
+    }));
 
-        console.log("Fetched events:", formattedEvents)
+    setEvents(formattedEvents);
+  };
 
-        setEvents(formattedEvents)
-      }
+  const loadData = async () => {
+    await Promise.all([
+      fetchEvents(),
+      fetchPoints(),
+    ]);
+  };
 
-      fetchEvents()
-    }, [])
+  loadData();
+}, []);
     const CustomToolbar = (toolbar) => {
       return (
         <div className="rbc-toolbar">
@@ -65,6 +84,35 @@ const Home = () => {
         </div>
       );
     };
+
+const getLevel = (points) => {
+  if (points === null) return 1;
+
+  if (points < 100) return 1;
+  if (points < 500) return 2;
+  if (points < 1000) return 3;
+  if (points < 1500) return 4;
+
+  // Levels 5-10 (500 point difference)
+  if (points < 4500) {
+    return 5 + Math.floor((points - 1500) / 500);
+  }
+
+  // Levels 11-20 (1000 point difference)
+  if (points < 14500) {
+    return 11 + Math.floor((points - 4500) / 1000);
+  }
+
+  // Levels 21-30 (2000 point difference)
+  if (points < 34500) {
+    return 21 + Math.floor((points - 14500) / 2000);
+  }
+
+  return 30;
+};
+
+const currentLevel = getLevel(points);
+const currentLevelImage = `/GameLevels/Level${currentLevel}.png`;
 
     return(
         <>
@@ -91,7 +139,22 @@ const Home = () => {
                 <div className ="events-container">
                     <div className="reminder-container"> 
                         <h2 id="text">Current Points</h2>
-                        <p>Game stats</p>
+
+                          {points !== null && (
+                            <>
+                              <img
+                                src={currentLevelImage}
+                                alt={`Level ${currentLevel}`}
+                                className="level-image"
+                              />
+
+                              <h3>Level {currentLevel}</h3>
+                            </>
+                          )}
+
+                          <p className={points === null ? "loading" : ""}>
+                            {points ?? "--"} pts
+                          </p>
                         
                     </div>
                     <div className="event-container">

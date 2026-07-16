@@ -8,6 +8,7 @@ import { useMode } from "../../Context/ModeContext";
 import { useState, useEffect } from 'react'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import EventPopup from './EventPopup'
+import CompletionPopup from './CompletionPopup'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css"
 import supabase from '../../config/supabaseClient'
@@ -36,6 +37,9 @@ export default function CalendarApp () {
 
   const [draftEvent, setDraftEvent] = useState(null)
   const [isOpenEvent, setIsOpenEvent] = useState(false)
+  const [isOpenCompletion, setIsOpenCompletion] = useState(false)
+  const [completionEvent, setCompletionEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null)
 
   const { mode /*, toggleMode*/} = useMode();
 
@@ -59,7 +63,8 @@ export default function CalendarApp () {
       title: event.title,
       start: new Date(event.start_time),
       end: new Date(event.end_time),
-      tags: event.tags 
+      tags: event.tags,
+      completed: event.completed
     }))
 
         console.log("Fetched events:", formattedEvents)
@@ -83,33 +88,64 @@ export default function CalendarApp () {
 
   //handleSelect functions prep the eventPopup
   const handleSelectEvent = (event) => {
-    console.log(event)
-    setDraftEvent({
-      id: event.id,
-      title: event.title,
-      start: new Date(event.start),
-      end: new Date(event.end),
-      tags: [currentTag]
-    })
-    setIsOpenEvent(true)
+  console.log("Selected event:", event);
+
+  const expired = new Date() > new Date(event.end);
+
+  const selected = {
+    id: event.id,
+    title: event.title,
+    start: new Date(event.start),
+    end: new Date(event.end),
+    tags: event.tags,
+    completed: event.completed
+  };
+
+  if (expired) {
+    console.log("Opening completion popup");
+
+    setCompletionEvent(selected);
+    setIsOpenCompletion(true);
+
+  } else {
+    setDraftEvent(selected);
+    setIsOpenEvent(true);
   }
- 
-  const handleSelectSlot = (slotInfo) => {
-    setDraftEvent({
-      id: null,
-      title: "",
-      start: slotInfo.start,
-      end: slotInfo.end || new Date(slotInfo.start.getTime() + 60 * 60 * 1000),
-      tags: [currentTag]
-    })
-    setIsOpenEvent(true)
+};
+
+const handleSelectSlot = (slotInfo) => {
+  const now = new Date();
+
+  const startTime = new Date(slotInfo.start);
+  const endTime = new Date(slotInfo.end);
+
+  // Prevent creating events in the past
+  if (startTime < now) {
+    alert("You cannot create an event in the past.");
+    return;
   }
 
+  setDraftEvent({
+    id: null,
+    title: "",
+    start: startTime,
+    end: endTime || new Date(startTime.getTime() + 60 * 60 * 1000),
+    tags: [currentTag]
+  });
+
+  setIsOpenEvent(true);
+};
+
+ 
   const handleSave = async (eventData) => {
     if (!eventData.title || eventData.title.trim() === "") {
       alert("Please enter a title before saving.");
       return; // Stops the function from executing any database queries or closing the popup
 
+    }
+    if (eventData.end < eventData.start){
+      alert("Invalid Entry: Start time earlier than End Time")
+      return;
     }
     if (eventData.id) {
       const existingEvent = events.find(ev => ev.id === eventData.id);
@@ -214,6 +250,38 @@ export default function CalendarApp () {
   )
 }
 
+const handleCompletionSave = async (eventData) => {
+  console.log("Saving completion:", eventData);
+
+  const { data, error } = await supabase.rpc("complete_event", {
+    event_id: eventData.id,
+    is_completed: eventData.completed,
+    points_to_award: 10,
+  });
+
+  console.log("RPC data:", data);
+  console.log("RPC error:", error);
+
+  if (error) {
+    console.error("Completion failed:", error);
+    return;
+  }
+
+  setEvents(prev =>
+    prev.map(ev =>
+      ev.id === eventData.id
+        ? {
+            ...ev,
+            completed: eventData.completed
+          }
+        : ev
+    )
+  );
+
+  setCompletionEvent(null);
+  setIsOpenCompletion(false);
+};
+
   return (
     <>
   <div style={{ marginLeft: "100px", marginRight: "100px", marginTop: "100px"}}>
@@ -234,32 +302,54 @@ export default function CalendarApp () {
       onEventDrop={handleEventDrop}
       style={{ height: '77vh' }}
       eventPropGetter={(event) => {
-    // Handle both array format ["focus"] or pure text format "focus"
-    const tag = Array.isArray(event.tags) ? event.tags[0] : event.tags;
-    
-    if (tag === 'relax') {
-      return { className: 'event-relax' };
-    }
-    if (tag === 'focus') {
-      return { className: 'event-focus' };
-    }
-    
-    return {}; // Default styling if no matching tag
-  }}
+  const tag = Array.isArray(event.tags)
+    ? event.tags[0]
+    : event.tags;
+
+  const expired = new Date() > new Date(event.end);
+
+  if (expired) {
+    return {
+      className: "event-expired"
+    };
+  }
+
+  if (tag === "focus") {
+    return { className: "event-focus" };
+  }
+
+  if (tag === "relax") {
+    return { className: "event-relax" };
+  }
+
+  return {};
+}}
     />
   </div>
   {isOpenEvent && (
-   <EventPopup
-      isOpen={isOpenEvent}
-      onClose={() => {
-        setDraftEvent(null)
-        setIsOpenEvent(false)
-      }}
-      onSave={handleSave}
-      onDelete={handleDelete}
-      draftEvent={draftEvent}
-    />
-  )}
+  <EventPopup
+    isOpen={isOpenEvent}
+    onClose={() => {
+      setDraftEvent(null);
+      setIsOpenEvent(false);
+    }}
+    onSave={handleSave}
+    onDelete={handleDelete}
+    draftEvent={draftEvent}
+  />
+)}
+{isOpenCompletion && (
+  <CompletionPopup
+    isOpen={isOpenCompletion}
+    event={completionEvent}
+    onClose={() => {
+      setCompletionEvent(null);
+      setIsOpenCompletion(false);
+    }}
+    onSave={handleCompletionSave}
+  />
+)}
+
   </>
   );
 }

@@ -1,120 +1,278 @@
-
 .wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: stretch;
 
-    gap: 20px;
-    margin: 20px auto;
-    max-width: 1400px;
+display: flex;
+
+flex-wrap: wrap;
+
+justify-content: center;
+
+align-items: stretch;
+
+
+
+gap: 20px;
+
+margin: 20px auto;
+
+max-width: 1400px;
+
 }
+
+
+
 
 
 .box {
-    flex: 1;
-    min-width: 300px;
-    max-width: 500px;
-    max-height: 420px;
 
-    border-radius: 20px;
+flex: 1;
+
+min-width: 300px;
+
+max-width: 500px;
+
+max-height: 420px;
+
+
+
+border-radius: 20px;
+
 }
+
+
+
 
 
 .icon-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
 
-    
-    margin: 55px auto auto 200px;
-    max-width: 1200px;
-    gap: 10px;
+display: flex;
+
+flex-wrap: wrap;
+
+justify-content: flex-start;
+
+
+
+
+margin: 55px auto auto 200px;
+
+max-width: 1200px;
+
+gap: 10px;
+
 }
+
+
+
 
 
 .reminder-container,
+
 .event-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 
-    min-height: 230px;
-    width: 100%;
+display: flex;
 
-    border-radius: 20px;
-    padding: 20px;
-    box-sizing: border-box;
-    
+flex-direction: column;
+
+align-items: center;
+
+
+
+min-height: 230px;
+
+width: 100%;
+
+
+
+border-radius: 20px;
+
+padding: 20px;
+
+box-sizing: border-box;
+
+
 }
-    
+
+
+
 
 .reminder-container {
-    background-color: #efe6d2;
-    border: 2px dotted #fff8d8;
+
+background-color: #efe6d2;
+
+border: 2px dotted #fff8d8;
+
 }
+
+
 
 .event-container {
-    background-color: #fff8d8;
-    border: 2px dotted #efe6d2;
-    visibility: hidden;
+
+background-color: #fff8d8;
+
+border: 2px dotted #efe6d2;
+
+visibility: hidden;
+
 }
 
+
+
 .events-container {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    margin-right: 25px;
+
+display: flex;
+
+flex-direction: column;
+
+gap: 30px;
+
+margin-right: 25px;
+
 }
+
+
+
 
 
 #text {
-    font-family: Cooper Black, sans-serif;
-    color: #533a33;
-    font-size: 25px;
-    margin-top: 20px;
-    align-self: flex-start;
-    margin-left: 20px;
+
+font-family: Cooper Black, sans-serif;
+
+color: #533a33;
+
+font-size: 25px;
+
+margin-top: 20px;
+
+align-self: flex-start;
+
+margin-left: 20px;
+
 }
+
+
 
 .welcome-msg {
-    font-family: Cooper Black, sans-serif;
-    color: #364a61;
 
-    font-size: clamp(28px, 3vw, 50px);
-    text-align: center;
+font-family: Cooper Black, sans-serif;
 
-    margin-top: 10px;
-    margin-bottom: 20px;
+color: #364a61;
+
+
+
+font-size: clamp(28px, 3vw, 50px);
+
+text-align: center;
+
+
+
+margin-top: 10px;
+
+margin-bottom: 20px;
+
 }
+
+
 
 .calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 10px 15px;
-    margin-bottom: 20px; 
-    box-sizing: border-box;
+
+display: flex;
+
+align-items: center;
+
+justify-content: space-between;
+
+width: 100%;
+
+padding: 10px 15px;
+
+margin-bottom: 20px;
+
+box-sizing: border-box;
+
 }
 
+
+
 .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-    width: 100%;
-    margin-top: 10px; 
+
+display: grid;
+
+grid-template-columns: repeat(7, 1fr);
+
+gap: 8px;
+
+width: 100%;
+
+margin-top: 10px;
+
 }
+
 .icon-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 10px;
-    
-    /* Remove the hardcoded auto margins that break layouts */
-    margin: 25px 0 0 20px; 
-    max-width: 1200px;
-    margin-top: 7rem;
-    /* Forces it to stay below the calendar structure naturally */
-    clear: both; 
+
+display: flex;
+
+flex-wrap: wrap;
+
+justify-content: flex-start;
+
+gap: 10px;
+
+
+/* Remove the hardcoded auto margins that break layouts */
+
+margin: 25px 0 0 20px;
+
+max-width: 1200px;
+
+margin-top: 7rem;
+
+/* Forces it to stay below the calendar structure naturally */
+
+clear: both;
+
+}
+
+
+
+.level-image {
+
+width: 140px;
+
+height: auto;
+
+display: block;
+
+margin: 10px auto;
+
+}
+
+
+
+.reminder-container h3 {
+
+text-align: center;
+
+margin: 8px 0;
+
+font-size: 20px;
+
+font-weight: bold;
+
+}
+
+
+
+.reminder-container p {
+
+text-align: center;
+
+font-size: 28px;
+
+font-weight: bold;
+
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
