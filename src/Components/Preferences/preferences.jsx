@@ -12,6 +12,7 @@ const Preferences = () => {
   const [fetchError, setFetchError] = useState(null)
   const [prefs, setPrefs] = useState(null)
   const [notifTime, setNotifTime] = useState("00:00")
+  const [currentNotifTime, setCurrentNotifTime] = useState("00:00")
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -68,9 +69,9 @@ const Preferences = () => {
   e.preventDefault();
 
   const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+  data: { user },
+  error: userError,
+} = await supabase.auth.getUser();
 
    if (userError || !user) {
       alert("User not logged in")
@@ -105,6 +106,8 @@ const Preferences = () => {
     } 
     
       setFormError(null)
+      setCurrentNotifTime(notifTime)
+
       alert(`Notification time updated to ${formatToAMPM(notifTime)}`) 
       console.log(data)
     
@@ -138,6 +141,7 @@ const Preferences = () => {
     const minutes = String(date.getMinutes()).padStart(2, '0')
 
     setNotifTime(`${hours}:${minutes}`)
+    setCurrentNotifTime(`${hours}:${minutes}`)
   }
 
   setLoading(false);
@@ -196,28 +200,32 @@ const Preferences = () => {
       </div>
       
       <div className="preference-content">
-      <form className="time-form" onSubmit={handleNotifTime}>
-        <input 
-          type="time"
-          id="notification-time"
-          data-testid="notification-time-input"
-          value={notifTime}
-          onChange={(e) => setNotifTime(e.target.value)}
-        />
-        <button className="pref-btn">Set your time pref</button>
-      </form>
+        <form className="time-form" onSubmit={handleNotifTime}>
+          <input 
+            type="time"
+            id="notification-time"
+            data-testid="notification-time-input"
+            value={notifTime}
+            onChange={(e) => setNotifTime(e.target.value)}
+          />
+          <button className="pref-btn">Set your time pref</button>
+        </form>
       {formError && <p>{formError}</p>}
-      <button className="create-button" onClick={() => navigate("/create")}>CREATE</button>
-      <div>
-      <button className="popup-button" onClick={() => setShowPopup(true)}>Need Help?</button>
+      <div className="add-button-container">
+      <button className="add-buttons" onClick={() => navigate("/create")}>CREATE</button>
+      {!showPopup && (
+        <button
+        className="add-buttons"
+        onClick={() => setShowPopup(true)}
+        > Need Help? </button>
+        )}
+      </div>
        {showPopup && (
         <Popup 
         onClose={() => setShowPopup(false)}
         onGenerate={generatePreferences}
         loading={loading} />
       )} 
-      </div>    
-      </div>
 
 
       {prefs && (
@@ -237,8 +245,9 @@ const Preferences = () => {
       {loading ? (
         null
       ) : (
-        <p>Current notification time: {formatToAMPM(notifTime)}</p>
+        <p>Current notification time: {formatToAMPM(currentNotifTime)}</p>
       )}
+      </div>
     </>
   )
 }

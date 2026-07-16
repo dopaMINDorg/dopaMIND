@@ -47,7 +47,7 @@
   box-sizing: border-box;
 }
 
-/* input */
+
 #notification-time {
   padding: 8px;
   border-radius: 5px;
@@ -57,9 +57,15 @@
   font-size: 16px;
   color: #364a61;
 }
+.add-button-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 0.2rem;
+}
 
 
-.create-button {
+.add-buttons {
   padding: 10px 20px;
 
   background-color: #668db8;
@@ -74,7 +80,7 @@
   cursor: pointer;
 }
 
-.create-button:hover {
+.add-buttons:hover {
   background-color: #364a61;
   color: #fff8d8;
 }
