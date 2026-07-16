@@ -26,6 +26,7 @@ const LoginSignUp = () => {
         password: password,
         options: {
           data: {
+            redirectTo: 'http://localhost:3000/login-sign-up', 
             display_name: name, // Stores name in user_metadata
           }
         }
@@ -38,7 +39,7 @@ const LoginSignUp = () => {
       if (data) {
         console.log(data)
         alert(/*"Sign up successful! Please Login to continue."*/
-          "Account created Successfully! Welcome home!")
+          "Account created Successfully! Check your inbox for a verification email.")
         // Reset action to Login so they can immediately sign in
         setAction("Login") 
       }
