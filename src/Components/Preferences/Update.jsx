@@ -48,8 +48,23 @@ const Update = () => {
     const hours = Number(time_hours);
     const minutes = Number(time_minutes);
 
-    if(hours < 0 || minutes < 0 || minutes >= 60 || hours > 24 || (hours === 0 && minutes === 0)) {
-      setFormError('Please enter valid Duration')
+    if(!activity || !time_minutes ||!time_hours){
+      setFormError('Please fill in all the fields correctly')
+      return 
+    }
+
+    if(hours < 0 || minutes < 0 ) {
+      setFormError('Please enter valid Duration (hours and minutes cannot be negative)')
+      return;
+    }
+    
+    if(minutes >= 60 || hours > 24 ) {
+      setFormError('Please enter valid Duration (minutes should not exceed 59 and hours should not exceed 24)')
+      return;
+    }
+
+    if(hours === 0 && minutes === 0) {
+      setFormError('Please enter valid Duration (dont leave duration as 0 hours and 0 minutes)')
       return;
     }
 

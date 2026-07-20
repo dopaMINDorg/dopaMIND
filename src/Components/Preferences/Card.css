@@ -8,8 +8,6 @@
 .material-icons {
     font-size: 20px;
     color: #fff8d8;
-    cursor: pointer;
-    font-family: cooper black, sans-serif;
     background-color: #668db8;
     border: 2px dotted #364a61;
     border-radius: 8px;
@@ -20,8 +18,7 @@
     color: #fff8d8;
 }
 
-.pref-btn {
-    font-family: cooper black, sans-serif; 
+.pref-btn { 
     height: 30px;
     background-color: #668db8;
     border: 2px dotted #364a61;
@@ -46,14 +43,10 @@
     padding: 1rem;
     border-radius: 12px;
     border: #fff8d8 2px dotted;
-
     min-height: 120px;
-    width: 227px;
-
-    font-family: cooper black, sans-serif;
+    width: 15rem;
     font-size: 25px;
     color: #533a33;
-
     display: flex;
     flex-direction: column;
 }

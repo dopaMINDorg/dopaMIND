@@ -116,16 +116,16 @@ export default function EventPopup({
       <div className="popup">
         <h3>{form.id ? `Edit ${dynamicTerm}` : `Add ${dynamicTerm}`}</h3>
         {mode === "relax" && (
-          <div className="preference-selector" style={{ marginBottom: "15px" }}>
-            <label style={{ display: "block", marginBottom: "5px", fontSize: "14px", fontWeight: "bold" }}>
+          <div className="preference-selector" >
+            <label >
               Relax Preference ({Math.floor(slotDurationInMinutes / 60)}h {slotDurationInMinutes % 60}m block):
             </label>
-            {fetchError && <p className="error" style={{ color: "red", fontSize: "12px" }}>{fetchError}</p>}
+            {fetchError && <p className="error">{fetchError}</p>}
             
             <select 
               onChange={(e) => handleChange("title", e.target.value)}
               value={form.title}
-              style={{ width: "100%", padding: "8px", borderRadius: "4px" }}
+              
             >
               <option value="">-- Choose an eligible preference --</option>
               {availablePrefs.map(pref => (
@@ -140,7 +140,7 @@ export default function EventPopup({
           value={form.title}
           onChange={(e) => handleChange("title", e.target.value)}
           placeholder={`${dynamicTerm} title`}
-          style={{ width: "100%", marginBottom: "10px", padding: "8px" }}
+          
         />
         <input
           type="datetime-local"

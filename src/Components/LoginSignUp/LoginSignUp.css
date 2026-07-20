@@ -32,7 +32,6 @@
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 500;
     color: #364a61;
-    font-family: "Cooper Black", sans-serif;
     text-align: center;
 }
 
@@ -80,7 +79,6 @@
 
     font-size: clamp(1rem, 2vw, 1.5rem);
     color: #364a61;
-    font-family: "Cooper Black", sans-serif;
 }
 
 .action-container {
@@ -109,7 +107,6 @@
     color: #fff8d8;
 
     font-size: clamp(1rem, 2vw, 1.2rem);
-    font-family: "Cooper Black", sans-serif;
 
     display: flex;
     justify-content: center;

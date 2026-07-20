@@ -34,7 +34,7 @@ export default function CompletionPopup({
       <div className="popup">
         <h3>Event Completed?</h3>
 
-        <p>
+        <p className="event-title" >
           <strong>{event.title}</strong>
         </p>
 

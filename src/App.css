@@ -1,5 +1,8 @@
 
-.App {
-  min-height: 100vh;
-  background-color: #c7ddef;
+body {
+  /* min-height: 100vh;
+  background-color: #c7ddef; */
+  font-family: "Titan One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }

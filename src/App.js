@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import "./index.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"; 
 
 import LoginSignUp from "./Components/LoginSignUp/LoginSignUp";

@@ -17,7 +17,7 @@
   background: white;
   padding: 24px;
   border-radius: 10px;
-  min-width: 350px;
+  min-width: 35rem;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -26,4 +26,8 @@
 .popup button {
   padding: 10px;
   cursor: pointer;
+}
+
+.event-title {
+  font-size: 2rem;
 }

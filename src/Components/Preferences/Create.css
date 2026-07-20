@@ -1,19 +1,12 @@
 
 .create-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  width: 100%;
-  max-width: 1200px;
-
-  margin: 5px auto 20px auto;
-  padding: 0 20px;
-  box-sizing: border-box;
-
-  font-family: "Cooper Black", sans-serif;
+  flex: 1;
   font-size: 40px;
+  align-items: center;
   color: #364a61;
+  margin-top: 1rem;
+  padding: 1rem;
+
 }
 
 
@@ -21,47 +14,32 @@
 .create-container {
   width: 100%;
   max-width: 500px;
-
   display: flex;
   justify-content: center;
-
   margin: 0 auto;
   box-sizing: border-box;
 }
-
-
 
 .create-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-
   width: 100%;
   min-height: 380px;
-
   background: #fff8d8;
   padding: 20px;
-
   border-radius: 20px;
   border: 2px dotted #364a61;
-
   box-sizing: border-box;
 }
 
-
-
 .create-input {
-  font-family: "Cooper Black", sans-serif;
   font-size: 20px;
-
   width: 100%;
   min-height: 100px;
-
   padding: 12px 15px;
-
   border-radius: 20px;
   border: 1px solid #ccc;
-
   color: #364a61;
   box-sizing: border-box;
 }
@@ -71,27 +49,18 @@
 .create-add-btn {
   width: 120px;
   height: 45px;
-
   align-self: center;
-
-  font-family: "Cooper Black", sans-serif;
   font-size: 16px;
-
   border-radius: 18px;
-
   background-color: #668db8;
   color: #fff8d8;
-
   border: 2px dotted #364a61;
-  cursor: pointer;
 }
 
 .create-add-btn:hover {
   background-color: #364a61;
   color: #fff8d8;
 }
-
-
 
 .create-error {
   align-self: center;
