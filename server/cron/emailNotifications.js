@@ -7,11 +7,7 @@ console.log("Email notification cron loaded");
 cron.schedule("* * * * *", async () => {
   console.log("Cron triggered");
 
-  const now = new Date();
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
-
-  const { data, error } = await supabase
+  const { data: notificationRows, error } = await supabase
     .from("Notification Time")
     .select("id, notif_time");
 
@@ -20,38 +16,83 @@ cron.schedule("* * * * *", async () => {
     return;
   }
 
-  for (const row of data) {
+  // Current time in Singapore timezone
+  const now = new Date();
+
+  const singaporeTime = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Singapore",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(now);
+
+  const [currentHour, currentMinute] = singaporeTime
+    .split(":")
+    .map(Number);
+
+  console.log(
+    "Current SG time:",
+    currentHour,
+    currentMinute
+  );
+
+
+  const { data: authData, error: authError } =
+    await supabase.auth.admin.listUsers();
+
+  if (authError) {
+    console.error("Error fetching users:", authError);
+    return;
+  }
+
+
+  for (const row of notificationRows) {
     if (!row.notif_time) continue;
 
-    const notifTime = new Date(row.notif_time);
+    // Convert stored timestamptz to Singapore time
+    const notifTimeSG = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Singapore",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).format(new Date(row.notif_time));
+
+
+    const [notifHour, notifMinute] = notifTimeSG
+      .split(":")
+      .map(Number);
+
 
     if (
-      notifTime.getHours() === currentHour &&
-      notifTime.getMinutes() === currentMinute
+      notifHour === currentHour &&
+      notifMinute === currentMinute
     ) {
-      console.log("Notification due for user:", row.id);
+      console.log("Notification due:", row.id);
 
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("email, name")
-        .eq("id", row.id)
-        .single();
 
-      if (profileError) {
-        console.error(
-          `Error fetching profile for user ${row.id}:`,
-          profileError
-        );
+      const user = authData.users.find(
+        (u) => u.id === row.id
+      );
+
+      if (!user) {
+        console.log("User not found:", row.id);
         continue;
       }
 
-      if (!profile?.email) {
-        console.log("No email found for user:", row.id);
+
+      if (!user.email_confirmed_at) {
+        console.log("Email not verified:", user.email);
         continue;
       }
 
-      await sendEmail(profile.email, profile.name);
-      console.log(`✅ Email sent to ${profile.email}`);
+
+      const name =
+        user.user_metadata?.display_name ?? "User";
+
+
+      await sendEmail(user.email, name);
+
+      console.log("Email sent:", user.email);
     }
   }
 });
