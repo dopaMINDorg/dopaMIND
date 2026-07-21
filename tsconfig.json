@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "types": ["cypress", "node", "mocha"],
+    "moduleResolution": "node16",
+    "strict": true
+  },
+  "include": [
+    "cypress/**/*.ts",
+    "cypress.config.js"
+  ]
+}

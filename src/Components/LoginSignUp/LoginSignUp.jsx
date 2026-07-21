@@ -20,14 +20,14 @@ const LoginSignUp = () => {
 
   const handleAuth = async () => {
     if (action === "Sign Up") {
-      // 1. Pass the name in the options.data object
+      
       const { data, error } = await supabase.auth.signUp({
         email: email,
         password: password,
         options: {
           data: {
             redirectTo: 'http://localhost:3000/login-sign-up', 
-            display_name: name, // Stores name in user_metadata
+            display_name: name,
           }
         }
       })
@@ -79,13 +79,12 @@ const LoginSignUp = () => {
           <div data-testid="Login" className={action==="Sign Up"?"action gray":"action"} onClick={()=>{setAction("Login")}}>Login</div>
         </div>
         <div className="login-inputs">
-            {/* 2. Conditionally render the Name input only during Sign Up */}
             {action === "Sign Up" && (
               <Input value="text" dummy= "Name" inputValue={name} setInputValue={setName} imgType={<FaceIcon className="icon"/>}/>
             )}
             
-            <Input value="email"  dummy="Email ID"inputValue={email} setInputValue={setEmail} imgType={<EmailIcon className="icon"/>}/>
-            <Input value="password"  dummy="Password" inputValue={password} setInputValue={setPassword} imgType={<PasswordIcon className="icon" />}/>
+            <Input  value="email"  dummy="Email ID" inputValue={email} setInputValue={setEmail} imgType={<EmailIcon className="icon"/>}/>
+            <Input  value="password"  dummy="Password" inputValue={password} setInputValue={setPassword} imgType={<PasswordIcon className="icon" />}/>
         </div>
         {/* Fixed: You don't need to pass 'action' into handleAuth here since it's already in state */}
         <button id="enter-button" onClick={handleAuth}>Enter</button>
@@ -98,7 +97,7 @@ function Input({value, dummy, inputValue, setInputValue, imgType}) {
   return (
     <div className="login-input">
       {imgType}
-      <input type={value} placeholder={dummy} value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+      <input data-testid={value} type={value} placeholder={dummy} value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
     </div>
   );
 }
