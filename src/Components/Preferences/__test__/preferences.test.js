@@ -320,14 +320,15 @@ expect(text).toBeInTheDocument();
 test("Current notification time(text) shows updated notif time", async () => {
   render(<MockPreferences />);
   const input = screen.getByTestId("notification-time-input");
-  //wait for the first load 
-  await screen.findByText(/current notification time/i);
   await userEvent.clear(input);
   await userEvent.type(input, "18:45");
-  //wait for second load after input is changed
-  const text = await screen.findByText(/current notification time/i);
-
-  expect(text).toHaveTextContent("6:45 PM");
+  const button = screen.getByRole("button", {
+    name: /Set your time pref/i,
+  });
+  await userEvent.click(button);
+  expect(
+    await screen.findByText(/current notification time/i)
+  ).toHaveTextContent("6:45 PM");
 });
 
 })
