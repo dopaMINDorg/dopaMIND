@@ -39,7 +39,7 @@ export default function CalendarApp () {
   const [isOpenEvent, setIsOpenEvent] = useState(false)
   const [isOpenCompletion, setIsOpenCompletion] = useState(false)
   const [completionEvent, setCompletionEvent] = useState(null);
-  const [selectedEvent, setSelectedEvent] = useState(null)
+  //const [selectedEvent, setSelectedEvent] = useState(null)
 
   const { mode /*, toggleMode*/} = useMode();
 

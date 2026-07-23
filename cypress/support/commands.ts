@@ -35,3 +35,19 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('login', () => {
+ cy.visit('http://localhost:3000/');
+ //cy.on('window:alert', (text) => { expect(text).to.equal('Login successful!') });
+    cy.get('[data-testid="Login"]').click();
+    cy.get('[data-testid="email"]').type('abc@gmail.com');
+    cy.get('[data-testid="password"]').type('123456789');
+    cy.get('[id="enter-button"]').click();
+    cy.url().should('include', '/home');
+})
+
+declare namespace Cypress {
+  interface Chainable {
+    login(): Chainable<void>
+  }
+}

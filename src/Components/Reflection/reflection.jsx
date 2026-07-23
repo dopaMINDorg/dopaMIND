@@ -107,7 +107,7 @@ const Reflection = () => {
         )}
         
         <div className="reflection-buttons-container">
-        <button id="other-button" onClick={fetchQuestions}>Change Prompts</button>
+        <button id="other-button-other" onClick={fetchQuestions}>Change Prompts</button>
         <button id="other-button" onClick={handleSubmit}>Submit</button>
         </div>
         
