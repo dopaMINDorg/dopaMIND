@@ -40,16 +40,27 @@ jest.mock("react-router-dom", () => ({
 
 describe("Update Component", () => {
 
-    beforeEach(() => {
+  beforeEach(() => {
   jest.clearAllMocks();
 
   mockSupabase.auth.getUser.mockResolvedValue({
-    data: {
-      user: {
-        id: "123",
-      },
-    },
+    data: { user: { id: "123" } },
     error: null,
+  });
+
+  mockSupabase.from.mockReturnValue({
+    select: jest.fn(() => ({
+      eq: jest.fn(() => ({
+        single: jest.fn().mockResolvedValue({
+          data: {
+            activity: "Reading",
+            time_hours: 1,
+            time_minutes: 30,
+          },
+          error: null,
+        }),
+      })),
+    })),
   });
 });
 
@@ -105,11 +116,25 @@ test("renders Add activity button", () => {
 describe("error handling with invalid inputs", () => {
 
 test("shows error when empty fields are submitted", async () => {
-    render(<MockUpdate />);
-    const button = screen.getByRole("button", {name : /Update Activity/i });
-    fireEvent.click(button);
-    const errorText = screen.findByText(/Please enter valid Duration/i);
-    expect(await errorText).toBeInTheDocument();
+  render(<MockUpdate />);
+  await waitFor(() => {
+    expect(screen.getByDisplayValue("Reading")).toBeInTheDocument();
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Activity:/i), {
+    target: { value: "" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Hours:/i), {
+    target: { value: "" },
+  });
+  fireEvent.change(screen.getByPlaceholderText(/Minutes:/i), {
+    target: { value: "" },
+  });
+  fireEvent.click(
+    screen.getByRole("button", { name: /Update Activity/i })
+  );
+  expect(
+    await screen.findByText(/Please fill in all the fields correctly/i)
+  ).toBeInTheDocument();
 });
 
 test("shows error when duration is set to Ohr and 0min", async () => {
@@ -124,7 +149,7 @@ test("shows error when duration is set to Ohr and 0min", async () => {
     const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
     
-    const errorText = screen.findByText(/Please enter valid Duration/i);
+    const errorText = screen.findByText("Please enter valid Duration (dont leave duration as 0 hours and 0 minutes)");
     expect(await errorText).toBeInTheDocument();
 });
 
@@ -140,7 +165,7 @@ test("shows error when minutes are negative", async () => {
     const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
     
-    const errorText = screen.findByText(/Please enter valid Duration/i);
+    const errorText = screen.findByText("Please enter valid Duration (hours and minutes cannot be negative)");
     expect(await errorText).toBeInTheDocument();
 });
 
@@ -156,7 +181,7 @@ test("shows error when hours are negative", async () => {
     const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
     
-    const errorText = screen.findByText(/Please enter valid Duration/i);
+    const errorText = screen.findByText("Please enter valid Duration (hours and minutes cannot be negative)");
     expect(await errorText).toBeInTheDocument();
 });
 
@@ -172,7 +197,7 @@ test("shows error when minutes are greater 59", async () => {
     const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
     
-    const errorText = screen.findByText(/Please enter valid Duration/i);
+    const errorText = screen.findByText("Please enter valid Duration (minutes should not exceed 59 and hours should not exceed 24)");
     expect(await errorText).toBeInTheDocument();
 });
 
@@ -188,7 +213,7 @@ test("shows error when hours are greater 24", async () => {
     const button = screen.getByRole("button", {name : /Update Activity/i });
     fireEvent.click(button);
     
-    const errorText = screen.findByText(/Please enter valid Duration/i);
+    const errorText = screen.findByText("Please enter valid Duration (minutes should not exceed 59 and hours should not exceed 24)");
     expect(await errorText).toBeInTheDocument();
 });
 
@@ -227,19 +252,32 @@ test('shows auth error when no user is logged in', async () => {
 
 test("navigates to preferences on successful update", async () => {
   mockSupabase.from.mockReturnValue({
-    update: () => ({
-      eq: () => ({
-        select: () => ({
-          single: () =>
-            Promise.resolve({
-              data: { id: 1 },
-              error: null,
-            }),
+  select: () => ({
+    eq: () => ({
+      single: () =>
+        Promise.resolve({
+          data: {
+            activity: "Reading",
+            time_hours: 1,
+            time_minutes: 30,
+          },
+          error: null,
         }),
+    }),
+  }),
+
+  update: () => ({
+    eq: () => ({
+      select: () => ({
+        single: () =>
+          Promise.resolve({
+            data: { id: 1 },
+            error: null,
+          }),
       }),
     }),
-  });
-
+  }),
+});
   render(<MockUpdate />);
 
   fireEvent.change(screen.getByPlaceholderText(/Activity:/i), {
@@ -263,18 +301,32 @@ test("navigates to preferences on successful update", async () => {
 
 test("shows error when supabase update fails", async () => {
   mockSupabase.from.mockReturnValue({
-    update: () => ({
-      eq: () => ({
-        select: () => ({
-          single: () =>
-            Promise.resolve({
-              data: null,
-              error: new Error("update failed"),
-            }),
+  select: () => ({
+    eq: () => ({
+      single: () =>
+        Promise.resolve({
+          data: {
+            activity: "Reading",
+            time_hours: 1,
+            time_minutes: 30,
+          },
+          error: null,
         }),
+    }),
+  }),
+
+  update: () => ({
+    eq: () => ({
+      select: () => ({
+        single: () =>
+          Promise.resolve({
+            data: null,
+            error: new Error("update failed"),
+          }),
       }),
     }),
-  });
+  }),
+});
 
   render(<MockUpdate />);
 

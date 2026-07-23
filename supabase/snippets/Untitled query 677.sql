@@ -1,0 +1,1 @@
+GRANT ALL ON TABLE public."Preferences" TO service_role;

@@ -1,5 +1,5 @@
 import { useParams, useNavigate} from "react-router-dom"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import supabase from '../../config/supabaseClient'
 //uses create css styling
 
@@ -8,10 +8,30 @@ const Update = () => {
   const {id} = useParams()
   const navigate = useNavigate()
 
-  const [activity, setActivity] = useState(null)
-  const [time_hours, setHours] = useState(null)
-  const [time_minutes, setMinutes] = useState(null)
+  const [activity, setActivity] = useState('')
+  const [time_hours, setHours] = useState('')
+  const [time_minutes, setMinutes] = useState('')
   const [formError, setFormError] = useState('')
+
+  useEffect(() => {
+  const fetchPreference = async () => {
+    const { data, error } = await supabase
+      .from('Preferences')
+      .select('activity, time_hours, time_minutes')
+      .eq('id', id)
+      .single()
+
+    if (error) {
+      console.log(error)
+      setFormError('Could not fetch preference')
+      return
+    }
+
+    setActivity(data.activity)
+    setHours(data.time_hours)
+    setMinutes(data.time_minutes)
+  }
+  fetchPreference() }, [id])
     
   const handleSubmit = async (e) => {
 
@@ -28,8 +48,23 @@ const Update = () => {
     const hours = Number(time_hours);
     const minutes = Number(time_minutes);
 
-    if(hours < 0 || minutes < 0 || minutes >= 60 || hours > 24 || (hours === 0 && minutes === 0)) {
-      setFormError('Please enter valid Duration')
+    if(!activity || !time_minutes ||!time_hours){
+      setFormError('Please fill in all the fields correctly')
+      return 
+    }
+
+    if(hours < 0 || minutes < 0 ) {
+      setFormError('Please enter valid Duration (hours and minutes cannot be negative)')
+      return;
+    }
+    
+    if(minutes >= 60 || hours > 24 ) {
+      setFormError('Please enter valid Duration (minutes should not exceed 59 and hours should not exceed 24)')
+      return;
+    }
+
+    if(hours === 0 && minutes === 0) {
+      setFormError('Please enter valid Duration (dont leave duration as 0 hours and 0 minutes)')
       return;
     }
 

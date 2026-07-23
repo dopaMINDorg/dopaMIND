@@ -2,44 +2,97 @@ import cron from "node-cron";
 import supabase from "../supabaseClient.js";
 import { sendEmail } from "../services/emailService.js";
 
+console.log("Email notification cron loaded");
+
 cron.schedule("* * * * *", async () => {
   console.log("Cron triggered");
-  const now = new Date();
 
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
-
-  const { data, error } = await supabase
+  const { data: notificationRows, error } = await supabase
     .from("Notification Time")
-    .select(`
-      id,
-      notif_time,
-      user_id,
-      profiles ( email )
-    `);
+    .select("id, notif_time");
 
   if (error) {
-    console.error(error);
+    console.error("Error fetching notification times:", error);
     return;
-  } 
-  if (data){
-    console.log(data)
   }
 
-  for (const row of data) {
-    const notifTime = new Date(row.notif_time);
+  // Current time in Singapore timezone
+  const now = new Date();
+
+  const singaporeTime = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Singapore",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(now);
+
+  const [currentHour, currentMinute] = singaporeTime
+    .split(":")
+    .map(Number);
+
+  console.log(
+    "Current SG time:",
+    currentHour,
+    currentMinute
+  );
+
+
+  const { data: authData, error: authError } =
+    await supabase.auth.admin.listUsers();
+
+  if (authError) {
+    console.error("Error fetching users:", authError);
+    return;
+  }
+
+
+  for (const row of notificationRows) {
+    if (!row.notif_time) continue;
+
+    // Convert stored timestamptz to Singapore time
+    const notifTimeSG = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Singapore",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).format(new Date(row.notif_time));
+
+
+    const [notifHour, notifMinute] = notifTimeSG
+      .split(":")
+      .map(Number);
+
 
     if (
-      notifTime.getHours() === currentHour &&
-      notifTime.getMinutes() === currentMinute
+      notifHour === currentHour &&
+      notifMinute === currentMinute
     ) {
-      const email = row.profiles?.email;
+      console.log("Notification due:", row.id);
 
-      if (email) {
-        await sendEmail(email);
-      } else {
-        console.log("No email found for user:", row.user_id);
+
+      const user = authData.users.find(
+        (u) => u.id === row.id
+      );
+
+      if (!user) {
+        console.log("User not found:", row.id);
+        continue;
       }
+
+
+      if (!user.email_confirmed_at) {
+        console.log("Email not verified:", user.email);
+        continue;
+      }
+
+
+      const name =
+        user.user_metadata?.display_name ?? "User";
+
+
+      await sendEmail(user.email, name);
+
+      console.log("Email sent:", user.email);
     }
   }
 });

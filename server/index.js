@@ -2,6 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import './services/emailService.js'
+import "./cron/emailNotifications.js";
+import "./cron/dailyBonus.js";
+
 
 
 const app = express()

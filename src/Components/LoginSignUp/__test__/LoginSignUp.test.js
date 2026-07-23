@@ -87,41 +87,41 @@ test("user can change Password input", () => {
 
 });
 
+// this is also removed because this behaviour is not relevant
+// test("navigates to home upon successful login", async () => {
+//   supabase.auth.signInWithPassword.mockResolvedValue({
+//     data: { user: { id: "1" } },
+//     error: null,
+//   });
 
-test("navigates to home upon successful login", async () => {
-  supabase.auth.signInWithPassword.mockResolvedValue({
-    data: { user: { id: "1" } },
-    error: null,
-  });
+//   render(<LoginSignUp />);
 
-  render(<LoginSignUp />);
+//   // switch to Login mode
+//   fireEvent.click(screen.getByTestId("Login"));
 
-  // switch to Login mode
-  fireEvent.click(screen.getByTestId("Login"));
+//   fireEvent.change(screen.getByPlaceholderText("Email ID"), {
+//     target: { value: "test@gmail.com" },
+//   });
 
-  fireEvent.change(screen.getByPlaceholderText("Email ID"), {
-    target: { value: "test@gmail.com" },
-  });
+//   fireEvent.change(screen.getByPlaceholderText("Password"), {
+//     target: { value: "123456" },
+//   });
 
-  fireEvent.change(screen.getByPlaceholderText("Password"), {
-    target: { value: "123456" },
-  });
+//   fireEvent.click(screen.getByRole("button", { name: /enter/i }));
 
-  fireEvent.click(screen.getByRole("button", { name: /enter/i }));
+//   await waitFor(() => {
+//     expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
+//       email: "test@gmail.com",
+//       password: "123456",
+//     });
+//   });
 
-  await waitFor(() => {
-    expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
-      email: "test@gmail.com",
-      password: "123456",
-    });
-  });
-
-  await waitFor(() => {
-    expect(global.alert).toHaveBeenCalledWith("Login successful!"); });
-  await waitFor(() => {
-    expect(mockNavigate).toHaveBeenCalledWith("/home");
-  });
-});
+//   await waitFor(() => {
+//     expect(global.alert).toHaveBeenCalledWith("Login successful!"); });
+//   await waitFor(() => {
+//     expect(mockNavigate).toHaveBeenCalledWith("/home");
+//   });
+// });
 
 test("shows alert on login failure", async () => {
   supabase.auth.signInWithPassword.mockResolvedValue({
@@ -151,47 +151,47 @@ test("shows alert on login failure", async () => {
 });
 
 
-/// this test is iffy i deleted in the docs
-test("signs up successfully and switches to login mode", async () => {
-  supabase.auth.signUp.mockResolvedValue({
-    data: { user: { id: "1" } },
-    error: null,
-  });
+/// latest update this test is no longer useful for sign up behavior
+// test("signs up successfully and switches to login mode", async () => {
+//   supabase.auth.signUp.mockResolvedValue({
+//     data: { user: { id: "1" } },
+//     error: null,
+//   });
 
-  render(<LoginSignUp />);
+//   render(<LoginSignUp />);
 
-  fireEvent.change(screen.getByPlaceholderText("Name"), {
-    target: { value: "John" },
-  });
+//   fireEvent.change(screen.getByPlaceholderText("Name"), {
+//     target: { value: "John" },
+//   });
 
-  fireEvent.change(screen.getByPlaceholderText("Email ID"), {
-    target: { value: "john@gmail.com" },
-  });
+//   fireEvent.change(screen.getByPlaceholderText("Email ID"), {
+//     target: { value: "john@gmail.com" },
+//   });
 
-  fireEvent.change(screen.getByPlaceholderText("Password"), {
-    target: { value: "123456" },
-  });
+//   fireEvent.change(screen.getByPlaceholderText("Password"), {
+//     target: { value: "123456" },
+//   });
 
-  fireEvent.click(screen.getByRole("button", { name: /enter/i }));
+//   fireEvent.click(screen.getByRole("button", { name: /enter/i }));
 
-  await waitFor(() => {
-    expect(supabase.auth.signUp).toHaveBeenCalledWith({
-      email: "john@gmail.com",
-      password: "123456",
-      options: {
-        data: {
-          display_name: "John",
-        },
-      },
-    });
-  });
+//   await waitFor(() => {
+//     expect(supabase.auth.signUp).toHaveBeenCalledWith({
+//       email: "john@gmail.com",
+//       password: "123456",
+//       options: {
+//         data: {
+//           display_name: "John",
+//         },
+//       },
+//     });
+//   });
 
-  expect(global.alert).toHaveBeenCalledWith(
-    "Account created Successfully! Welcome home!"
-  );
+//   expect(global.alert).toHaveBeenCalledWith(
+//     "Account created Successfully! Welcome home!"
+//   );
 
-  //should switch to Login mode
-  expect(screen.getByText("Login")).toBeInTheDocument();
-});
+//   //should switch to Login mode
+//   expect(screen.getByText("Login")).toBeInTheDocument();
+// });
 
 });

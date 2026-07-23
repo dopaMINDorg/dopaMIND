@@ -7,7 +7,6 @@
 
 .reflection-header {
   flex: 1;
-  font-family: "Cooper Black", sans-serif;
   font-size: 40px;
   align-items: center;
   color: #364a61;
@@ -24,7 +23,6 @@
 
 
 #question {
-  font-family: "Cooper Black", sans-serif;
   color: #364a61;
   font-size: 30px;
 }
@@ -47,14 +45,10 @@
   width: 90%;
   max-width: 1000px;
   min-height: 110px;
-
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-
   resize: none;
-
-  font-family: "Cooper Black", sans-serif;
   font-size: 18px;
   color: #364a61;
   background-color: #f9f9f9;
@@ -69,7 +63,6 @@
 }
 
 #history-button {
-  font-family: "Cooper Black", sans-serif;
   padding: 10px 20px;
   border-radius: 10px;
   width: 20rem;
@@ -84,7 +77,6 @@
 }
 
 #other-button {
-  font-family: "Cooper Black", sans-serif;
   padding: 10px 20px;
   border-radius: 10px;
   width: 20rem;

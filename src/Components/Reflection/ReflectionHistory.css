@@ -9,14 +9,12 @@
 }
 
 .reflection-question {
-    font-family: "Cooper Black", sans-serif;
     font-size: 20px;
     color: #364a61;
     margin-bottom: 0.5rem;
 }
 
 .reflection-response {
-    font-family: "Cooper Black", sans-serif;
     font-size: 18px;
     color: #668db8;
     margin-bottom: 0.5rem;
@@ -26,7 +24,6 @@
 }
 
 .reflection-date {
-    font-family: "Cooper Black", sans-serif;
     font-size: 12px;
     color: gray;
 }

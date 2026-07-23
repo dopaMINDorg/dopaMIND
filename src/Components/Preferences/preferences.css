@@ -2,32 +2,23 @@
 .preference-header-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-
-  width: 100%;
-  max-width: 1200px;
-  margin: 5px auto 0 auto;
-  padding: 0 20px;
-  box-sizing: border-box;
+  margin-top: 1rem;
+  padding: 1rem;
 }
 
 .preference-header {
   flex: 1;
-  font-family: "Cooper Black", sans-serif;
   font-size: 40px;
-  margin-bottom: 20px;
+  align-items: center;
   color: #364a61;
 }
 
-.preference-home-button {
-  margin-left: 20px;
-}
 
 
 .preference-content {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 1rem;
   align-items: center;
 }
 
@@ -35,46 +26,42 @@
 
 .time-form {
   display: flex;
-  gap: 10px;
+  gap: 1rem;
   align-items: center;
-
   background: white;
   padding: 12px 16px;
-
   border-radius: 12px;
   border: 2px dotted #364a61;
-
   box-sizing: border-box;
 }
 
-/* input */
+
 #notification-time {
   padding: 8px;
   border-radius: 5px;
   border: 1px solid #ccc;
-
-  font-family: "Cooper Black", sans-serif;
   font-size: 16px;
   color: #364a61;
 }
 
-
-.create-button {
-  padding: 10px 20px;
-
-  background-color: #668db8;
-  color: #fff8d8;
-
-  border: 2px dotted #364a61;
-  border-radius: 8px;
-
-  font-family: "Cooper Black", sans-serif;
-  font-size: 16px;
-
-  cursor: pointer;
+.add-button-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.2rem;
 }
 
-.create-button:hover {
+
+.add-buttons {
+  padding: 0.5rem 1.5rem;
+  background-color: #668db8;
+  color: #fff8d8;
+  border: 2px dotted #364a61;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+.add-buttons:hover {
   background-color: #364a61;
   color: #fff8d8;
 }
@@ -82,31 +69,23 @@
 
 
 .preferences {
-  margin-top: 20px;
-
   width: 100%;
   display: flex;
   justify-content: center;
-
-  padding: 0 20px;
   box-sizing: border-box;
 }
-
 
 .preferences-grid {
   display: grid;
-
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px 40px;
-
+  grid-template-columns: repeat(auto-fill, 280px);
+  justify-content: center;
+  gap: 2rem;
   width: 100%;
-  max-width: 1100px;
-
-  margin: 0 auto 25px auto;
-  padding: 0 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem;
   box-sizing: border-box;
 }
-
 
 
 
