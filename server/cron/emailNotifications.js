@@ -1,127 +1,50 @@
-import cron from "node-cron";
-import supabase from "../supabaseClient.js";
-import { sendEmail } from "../services/emailService.js";
+import nodemailer from "nodemailer";
 
-console.log("Email notification cron loaded");
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log(
+  "EMAIL_APP_PASSWORD exists:",
+  !!process.env.EMAIL_APP_PASSWORD
+);
 
-let running = false;
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_APP_PASSWORD,
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
+});
 
-cron.schedule("* * * * *", async () => {
-  if (running) {
-    console.log("⚠️ Previous cron still running. Skipping...");
-    return;
-  }
-
-  running = true;
-
-  try {
-    console.log("========== CRON START ==========");
-
-    console.log("Fetching notification rows...");
-
-    const { data: notificationRows, error } = await supabase
-      .from("Notification Time")
-      .select("id, notif_time");
-
-    if (error) {
-      console.error("Notification query failed:", error);
-      return;
-    }
-
-    console.log(
-      `Fetched ${notificationRows.length} notification rows`
-    );
-
-    const now = new Date();
-
-    const singaporeTime = new Intl.DateTimeFormat("en-US", {
-      timeZone: "Asia/Singapore",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).format(now);
-
-    const [currentHour, currentMinute] = singaporeTime
-      .split(":")
-      .map(Number);
-
-    console.log(
-      `Current Singapore Time: ${currentHour}:${currentMinute}`
-    );
-
-    console.log("Fetching auth users...");
-
-    const {
-      data: authData,
-      error: authError,
-    } = await supabase.auth.admin.listUsers();
-
-    if (authError) {
-      console.error(authError);
-      return;
-    }
-
-    console.log(
-      `Fetched ${authData.users.length} users`
-    );
-
-    for (const row of notificationRows) {
-      if (!row.notif_time) continue;
-
-      const notifTimeSG = new Intl.DateTimeFormat("en-US", {
-        timeZone: "Asia/Singapore",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }).format(new Date(row.notif_time));
-
-      const [notifHour, notifMinute] =
-        notifTimeSG.split(":").map(Number);
-
-      if (
-        notifHour !== currentHour ||
-        notifMinute !== currentMinute
-      ) {
-        continue;
-      }
-
-      console.log(`Notification due for ${row.id}`);
-
-      const user = authData.users.find(
-        (u) => u.id === row.id
-      );
-
-      if (!user) {
-        console.log("User not found");
-        continue;
-      }
-
-      if (!user.email_confirmed_at) {
-        console.log(
-          `${user.email} has not verified email`
-        );
-        continue;
-      }
-
-      const name =
-        user.user_metadata?.display_name ?? "User";
-
-      console.log(
-        `Sending reminder to ${user.email}`
-      );
-
-      await sendEmail(user.email, name);
-
-      console.log(
-        `Reminder completed for ${user.email}`
-      );
-    }
-
-    console.log("========== CRON END ==========");
-  } catch (err) {
-    console.error("CRON FAILED");
-    console.error(err);
-  } finally {
-    running = false;
+transporter.verify((error) => {
+  if (error) {
+    console.error("SMTP connection failed:", error);
+  } else {
+    console.log("SMTP Ready");
   }
 });
+
+export async function sendEmail(to, subject, text) {
+  try {
+    console.log(`Sending email to ${to}`);
+
+    const info = await transporter.sendMail({
+      from: `"DopaMIND" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      text,
+    });
+
+    console.log("Email sent:", info.messageId);
+    return info;
+
+  } catch (error) {
+    console.error("Email send failed:", error);
+    throw error;
+  }
+}
+
+export default transporter;
