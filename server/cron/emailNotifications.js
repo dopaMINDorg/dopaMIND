@@ -4,95 +4,124 @@ import { sendEmail } from "../services/emailService.js";
 
 console.log("Email notification cron loaded");
 
+let running = false;
+
 cron.schedule("* * * * *", async () => {
-  console.log("Cron triggered");
-
-  const { data: notificationRows, error } = await supabase
-    .from("Notification Time")
-    .select("id, notif_time");
-
-  if (error) {
-    console.error("Error fetching notification times:", error);
+  if (running) {
+    console.log("⚠️ Previous cron still running. Skipping...");
     return;
   }
 
-  // Current time in Singapore timezone
-  const now = new Date();
+  running = true;
 
-  const singaporeTime = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Singapore",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(now);
+  try {
+    console.log("========== CRON START ==========");
 
-  const [currentHour, currentMinute] = singaporeTime
-    .split(":")
-    .map(Number);
+    console.log("Fetching notification rows...");
 
-  console.log(
-    "Current SG time:",
-    currentHour,
-    currentMinute
-  );
+    const { data: notificationRows, error } = await supabase
+      .from("Notification Time")
+      .select("id, notif_time");
 
+    if (error) {
+      console.error("Notification query failed:", error);
+      return;
+    }
 
-  const { data: authData, error: authError } =
-    await supabase.auth.admin.listUsers();
+    console.log(
+      `Fetched ${notificationRows.length} notification rows`
+    );
 
-  if (authError) {
-    console.error("Error fetching users:", authError);
-    return;
-  }
+    const now = new Date();
 
-
-  for (const row of notificationRows) {
-    if (!row.notif_time) continue;
-
-    // Convert stored timestamptz to Singapore time
-    const notifTimeSG = new Intl.DateTimeFormat("en-US", {
+    const singaporeTime = new Intl.DateTimeFormat("en-US", {
       timeZone: "Asia/Singapore",
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
-    }).format(new Date(row.notif_time));
+    }).format(now);
 
-
-    const [notifHour, notifMinute] = notifTimeSG
+    const [currentHour, currentMinute] = singaporeTime
       .split(":")
       .map(Number);
 
+    console.log(
+      `Current Singapore Time: ${currentHour}:${currentMinute}`
+    );
 
-    if (
-      notifHour === currentHour &&
-      notifMinute === currentMinute
-    ) {
-      console.log("Notification due:", row.id);
+    console.log("Fetching auth users...");
 
+    const {
+      data: authData,
+      error: authError,
+    } = await supabase.auth.admin.listUsers();
+
+    if (authError) {
+      console.error(authError);
+      return;
+    }
+
+    console.log(
+      `Fetched ${authData.users.length} users`
+    );
+
+    for (const row of notificationRows) {
+      if (!row.notif_time) continue;
+
+      const notifTimeSG = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Singapore",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }).format(new Date(row.notif_time));
+
+      const [notifHour, notifMinute] =
+        notifTimeSG.split(":").map(Number);
+
+      if (
+        notifHour !== currentHour ||
+        notifMinute !== currentMinute
+      ) {
+        continue;
+      }
+
+      console.log(`Notification due for ${row.id}`);
 
       const user = authData.users.find(
         (u) => u.id === row.id
       );
 
       if (!user) {
-        console.log("User not found:", row.id);
+        console.log("User not found");
         continue;
       }
-
 
       if (!user.email_confirmed_at) {
-        console.log("Email not verified:", user.email);
+        console.log(
+          `${user.email} has not verified email`
+        );
         continue;
       }
-
 
       const name =
         user.user_metadata?.display_name ?? "User";
 
+      console.log(
+        `Sending reminder to ${user.email}`
+      );
 
       await sendEmail(user.email, name);
 
-      console.log("Email sent:", user.email);
+      console.log(
+        `Reminder completed for ${user.email}`
+      );
     }
+
+    console.log("========== CRON END ==========");
+  } catch (err) {
+    console.error("CRON FAILED");
+    console.error(err);
+  } finally {
+    running = false;
   }
 });
