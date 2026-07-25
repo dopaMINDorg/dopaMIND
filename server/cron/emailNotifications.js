@@ -13,6 +13,7 @@ let running = false;
 
 
 
+
 cron.schedule(
   "* * * * *",
   async () => {
@@ -52,7 +53,8 @@ cron.schedule(
       const {
         data: notificationRows,
         error
-      } =
+      }
+      =
       await supabase
         .from("Notification Time")
         .select(
@@ -61,7 +63,7 @@ cron.schedule(
 
 
 
-      if (error) {
+      if(error){
 
         console.error(
           "Notification fetch error:",
@@ -81,10 +83,12 @@ cron.schedule(
 
 
 
+
       const singaporeTime =
         new Intl.DateTimeFormat(
           "en-US",
           {
+
             timeZone:
               "Asia/Singapore",
 
@@ -107,7 +111,8 @@ cron.schedule(
       const [
         currentHour,
         currentMinute
-      ] =
+      ]
+      =
       singaporeTime
         .split(":")
         .map(Number);
@@ -127,27 +132,39 @@ cron.schedule(
 
 
 
-      for (
+
+
+      for(
         const row of notificationRows
-      ) {
+      ){
 
 
-        if (
+        if(
           !row.notification_time
-        ) {
+        ){
+
+          console.log(
+            "Missing notification time:",
+            row.id
+          );
+
           continue;
+
         }
+
 
 
 
         const [
           notifHour,
           notifMinute
-        ] =
+        ]
+        =
         row.notification_time
           .slice(0,5)
           .split(":")
           .map(Number);
+
 
 
 
@@ -157,39 +174,34 @@ cron.schedule(
 
 
 
-        console.log({
+        console.log(
+          "TIME CHECK:",
+          {
 
-          user: row.id,
+            user:
+              row.id,
 
-          notificationTime:
-            `${String(notifHour).padStart(2,"0")}:${String(notifMinute).padStart(2,"0")}`,
+            notificationTime:
+              `${String(notifHour).padStart(2,"0")}:${String(notifMinute).padStart(2,"0")}`,
 
-          currentTime:
-            singaporeTime
+            currentTime:
+              singaporeTime,
 
-        });
-
-
-
-        /*
-          Allow sending up to 5 minutes late.
-
-          Example:
-          Notification: 13:51
-
-          Valid:
-          13:51
-          13:52
-          13:53
-          13:54
-          13:55
-        */
+          }
+        );
 
 
-        if (
+
+
+        if(
           currentTotal < notifTotal ||
           currentTotal > notifTotal + 5
-        ) {
+        ){
+
+          console.log(
+            "TIME NOT MATCHED:",
+            row.id
+          );
 
           continue;
 
@@ -198,7 +210,16 @@ cron.schedule(
 
 
         console.log(
-          "Notification due:",
+          "TIME MATCHED:",
+          row.id
+        );
+
+
+
+
+
+        console.log(
+          "Fetching auth user:",
           row.id
         );
 
@@ -207,18 +228,35 @@ cron.schedule(
         const {
           data:userData,
           error:userError
+        }
+        =
+        await supabase.auth.admin
+          .getUserById(
+            row.id
+          );
 
-        } =
-        await supabase.auth.admin.getUserById(
-          row.id
+
+
+
+        console.log(
+          "AUTH RESULT:",
+          {
+            email:
+              userData?.user?.email,
+
+            error:
+              userError
+
+          }
         );
 
 
 
-        if (
+
+        if(
           userError ||
           !userData?.user
-        ) {
+        ){
 
           console.error(
             "User fetch failed:",
@@ -231,14 +269,24 @@ cron.schedule(
 
 
 
+
         const user =
           userData.user;
 
 
 
-        if (
+
+        console.log(
+          "EMAIL VERIFIED:",
+          user.email_confirmed_at
+        );
+
+
+
+
+        if(
           !user.email_confirmed_at
-        ) {
+        ){
 
           console.log(
             "Email not verified:",
@@ -251,10 +299,12 @@ cron.schedule(
 
 
 
+
         const name =
           user.user_metadata
-          ?.display_name ??
+            ?.display_name ??
           "User";
+
 
 
 
@@ -280,7 +330,8 @@ cron.schedule(
 
 
 
-    } catch(error) {
+
+    }catch(error){
 
 
       console.error(
@@ -289,7 +340,7 @@ cron.schedule(
       );
 
 
-    } finally {
+    }finally{
 
 
       running = false;

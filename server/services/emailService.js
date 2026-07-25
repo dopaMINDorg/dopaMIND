@@ -25,10 +25,17 @@ const transporter =
 
     family: 4,
 
+
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_APP_PASSWORD,
+
+      user:
+        process.env.EMAIL_USER,
+
+      pass:
+        process.env.EMAIL_APP_PASSWORD,
+
     },
+
 
     connectionTimeout: 10000,
 
@@ -40,11 +47,37 @@ const transporter =
 
 
 
+// Test SMTP connection when server starts
+
+transporter.verify((error, success) => {
+
+  if (error) {
+
+    console.error(
+      "SMTP VERIFY FAILED:",
+      error
+    );
+
+  } else {
+
+    console.log(
+      "SMTP READY"
+    );
+
+  }
+
+});
+
+
+
+
+
 export async function sendEmail(
   to,
   subject,
   text
 ) {
+
 
   console.log(
     "Preparing email:",
@@ -83,6 +116,7 @@ export async function sendEmail(
     );
 
 
+
     return info;
 
 
@@ -99,5 +133,6 @@ export async function sendEmail(
     throw error;
 
   }
+
 
 }
