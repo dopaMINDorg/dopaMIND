@@ -17,29 +17,24 @@ console.log(
 const transporter =
   nodemailer.createTransport({
 
-    host:"smtp.gmail.com",
+    host: "smtp.gmail.com",
 
-    port:587,
+    port: 587,
 
-    secure:false,
+    secure: false,
 
-    family:4,
+    family: 4,
 
-
-    auth:{
-      user:
-        process.env.EMAIL_USER,
-
-      pass:
-        process.env.EMAIL_APP_PASSWORD,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_APP_PASSWORD,
     },
 
+    connectionTimeout: 10000,
 
-    connectionTimeout:10000,
+    greetingTimeout: 10000,
 
-    greetingTimeout:10000,
-
-    socketTimeout:10000,
+    socketTimeout: 10000,
 
 });
 
@@ -49,16 +44,21 @@ export async function sendEmail(
   to,
   subject,
   text
-){
+) {
+
+  console.log(
+    "Preparing email:",
+    to
+  );
+
 
   try {
 
 
     console.log(
-      "Sending email:",
+      "SMTP sending started:",
       to
     );
-
 
 
     const info =
@@ -87,7 +87,7 @@ export async function sendEmail(
 
 
 
-  } catch(error){
+  } catch(error) {
 
 
     console.error(
