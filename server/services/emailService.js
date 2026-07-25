@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import dns from "dns";
 
 
 console.log(
@@ -12,6 +13,10 @@ console.log(
 );
 
 
+// Force IPv4 DNS lookup
+dns.setDefaultResultOrder("ipv4first");
+
+
 
 function createTransporter() {
 
@@ -22,8 +27,6 @@ function createTransporter() {
     port: 587,
 
     secure: false,
-
-    family: 4,
 
 
     auth: {
@@ -98,7 +101,8 @@ export async function sendEmail(
 
 
     console.log(
-      "Sending email now..."
+      "Sending email to:",
+      to
     );
 
 
@@ -125,7 +129,6 @@ export async function sendEmail(
     );
 
 
-
     transporter.close();
 
 
@@ -147,7 +150,6 @@ export async function sendEmail(
       transporter.close();
 
     } catch {}
-
 
 
     throw error;
