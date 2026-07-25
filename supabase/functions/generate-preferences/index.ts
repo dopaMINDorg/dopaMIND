@@ -249,7 +249,7 @@ async function generateGeminiContent(prompt: string) {
       console.log(`Gemini attempt ${attempt + 1}`);
 
       return await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.1-flash-lite",
         contents: `
 You are a hobby recommendation assistant.
 
