@@ -1,18 +1,6 @@
 import nodemailer from "nodemailer";
 
 
-console.log(
-  "EMAIL_USER:",
-  process.env.EMAIL_USER
-);
-
-console.log(
-  "APP PASSWORD LENGTH:",
-  process.env.EMAIL_APP_PASSWORD?.length
-);
-
-
-
 function createTransporter() {
 
   return nodemailer.createTransport({
@@ -20,25 +8,20 @@ function createTransporter() {
     service: "gmail",
 
     auth: {
-
       user: process.env.EMAIL_USER,
-
       pass: process.env.EMAIL_APP_PASSWORD,
-
     },
 
+    logger: true,
+    debug: true,
 
     tls: {
-
       rejectUnauthorized: false,
-
     },
 
   });
 
 }
-
-
 
 
 
@@ -53,7 +36,6 @@ export async function sendEmail(
     "Preparing email:",
     to
   );
-
 
 
   const transporter =
@@ -80,8 +62,7 @@ export async function sendEmail(
 
 
     console.log(
-      "SMTP sending started:",
-      to
+      "Sending email now..."
     );
 
 
@@ -108,7 +89,6 @@ export async function sendEmail(
     );
 
 
-
     transporter.close();
 
 
@@ -117,21 +97,16 @@ export async function sendEmail(
 
 
 
-  } catch(error) {
+  } catch(error){
 
 
     console.error(
-      "EMAIL FAILED:",
+      "EMAIL ERROR:",
       error
     );
 
 
-    try {
-
-      transporter.close();
-
-    } catch {}
-
+    transporter.close();
 
 
     throw error;
