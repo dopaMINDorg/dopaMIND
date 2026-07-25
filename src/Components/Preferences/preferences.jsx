@@ -110,12 +110,11 @@ const Preferences = () => {
 
     const notif_time = notifDate.toISOString()
 
-
-    const { data, error } = await supabase
-      .from("Notification Time")
-      .update({
-        notif_time
-      })
+    const { data, error } = await supabase 
+      .from('Notification Time')
+      .update({notif_time})
+      .eq('id', user.id)
+      .select()
 
     if (error){
       console.log(error)
@@ -130,6 +129,7 @@ const Preferences = () => {
       console.log(data)
     
   }
+
 
   const fetchNotifTime = async () => {
     setLoading(true);
