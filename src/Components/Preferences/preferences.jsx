@@ -110,27 +110,12 @@ const Preferences = () => {
 
     const notif_time = notifDate.toISOString()
 
-    const formattedTime =
-      new Date(notifTime)
-        .toLocaleTimeString(
-          "en-GB",
-          {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-            timeZone: "Asia/Singapore"
-          }
-        );
 
     const { data, error } = await supabase
       .from("Notification Time")
       .update({
-        notif_time: formattedTime
+        notif_time
       })
-      .eq(
-        "id",
-        user.id
-      );
 
     if (error){
       console.log(error)
