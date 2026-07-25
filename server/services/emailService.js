@@ -47,11 +47,11 @@ const transporter =
 
 
 
-// Test SMTP connection when server starts
 
-transporter.verify((error, success) => {
 
-  if (error) {
+transporter.verify((error) => {
+
+  if(error){
 
     console.error(
       "SMTP VERIFY FAILED:",
@@ -76,8 +76,7 @@ export async function sendEmail(
   to,
   subject,
   text
-) {
-
+){
 
   console.log(
     "Preparing email:",
@@ -86,12 +85,6 @@ export async function sendEmail(
 
 
   try {
-
-
-    console.log(
-      "SMTP sending started:",
-      to
-    );
 
 
     const info =
@@ -121,7 +114,7 @@ export async function sendEmail(
 
 
 
-  } catch(error) {
+  } catch(error){
 
 
     console.error(
@@ -133,6 +126,5 @@ export async function sendEmail(
     throw error;
 
   }
-
 
 }
