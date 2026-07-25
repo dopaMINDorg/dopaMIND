@@ -13,13 +13,12 @@ let running = false;
 
 
 
-
 cron.schedule(
   "* * * * *",
   async () => {
 
 
-    if (running) {
+    if(running){
 
       console.log(
         "Previous cron still running, skipping"
@@ -76,10 +75,12 @@ cron.schedule(
 
 
 
+
       console.log(
         "Rows:",
         notificationRows.length
       );
+
 
 
 
@@ -108,6 +109,7 @@ cron.schedule(
 
 
 
+
       const [
         currentHour,
         currentMinute
@@ -119,16 +121,12 @@ cron.schedule(
 
 
 
+
       console.log(
         "Current SG time:",
-        singaporeTime
+        currentHour,
+        currentMinute
       );
-
-
-
-      const currentTotal =
-        currentHour * 60 +
-        currentMinute;
 
 
 
@@ -139,19 +137,12 @@ cron.schedule(
       ){
 
 
-        if(
-          !row.notification_time
-        ){
 
-          console.log(
-            "Missing notification time:",
-            row.id
-          );
+        if(!row.notification_time){
 
           continue;
 
         }
-
 
 
 
@@ -168,40 +159,31 @@ cron.schedule(
 
 
 
-        const notifTotal =
-          notifHour * 60 +
-          notifMinute;
+        console.log({
 
+          user: row.id,
 
+          notificationTime:
+            row.notification_time,
 
-        console.log(
-          "TIME CHECK:",
-          {
+          currentHour,
 
-            user:
-              row.id,
+          currentMinute,
 
-            notificationTime:
-              `${String(notifHour).padStart(2,"0")}:${String(notifMinute).padStart(2,"0")}`,
+          notifHour,
 
-            currentTime:
-              singaporeTime,
+          notifMinute
 
-          }
-        );
+        });
+
 
 
 
 
         if(
-          currentTotal < notifTotal ||
-          currentTotal > notifTotal + 5
+          notifHour !== currentHour ||
+          notifMinute !== currentMinute
         ){
-
-          console.log(
-            "TIME NOT MATCHED:",
-            row.id
-          );
 
           continue;
 
@@ -209,19 +191,12 @@ cron.schedule(
 
 
 
+
         console.log(
-          "TIME MATCHED:",
+          "Notification due:",
           row.id
         );
 
-
-
-
-
-        console.log(
-          "Fetching auth user:",
-          row.id
-        );
 
 
 
@@ -234,21 +209,6 @@ cron.schedule(
           .getUserById(
             row.id
           );
-
-
-
-
-        console.log(
-          "AUTH RESULT:",
-          {
-            email:
-              userData?.user?.email,
-
-            error:
-              userError
-
-          }
-        );
 
 
 
@@ -276,14 +236,6 @@ cron.schedule(
 
 
 
-        console.log(
-          "EMAIL VERIFIED:",
-          user.email_confirmed_at
-        );
-
-
-
-
         if(
           !user.email_confirmed_at
         ){
@@ -300,9 +252,18 @@ cron.schedule(
 
 
 
+        console.log(
+          "Sending email to:",
+          user.email
+        );
+
+
+
+
         const name =
           user.user_metadata
-            ?.display_name ??
+            ?.display_name
+          ??
           "User";
 
 
@@ -320,18 +281,12 @@ cron.schedule(
 
 
 
-        console.log(
-          "Reminder sent:",
-          user.email
-        );
-
-
       }
 
 
 
-
-    }catch(error){
+    }
+    catch(error){
 
 
       console.error(
@@ -340,10 +295,12 @@ cron.schedule(
       );
 
 
-    }finally{
+    }
+    finally{
 
 
       running = false;
+
 
 
       console.log(
@@ -355,4 +312,5 @@ cron.schedule(
 
 
   }
+
 );

@@ -6,7 +6,6 @@ console.log(
   process.env.EMAIL_USER
 );
 
-
 console.log(
   "APP PASSWORD LENGTH:",
   process.env.EMAIL_APP_PASSWORD?.length
@@ -14,59 +13,30 @@ console.log(
 
 
 
-const transporter =
-  nodemailer.createTransport({
+function createTransporter() {
 
-    host: "smtp.gmail.com",
+  return nodemailer.createTransport({
 
-    port: 587,
-
-    secure: false,
-
-    family: 4,
-
+    service: "gmail",
 
     auth: {
 
-      user:
-        process.env.EMAIL_USER,
+      user: process.env.EMAIL_USER,
 
-      pass:
-        process.env.EMAIL_APP_PASSWORD,
+      pass: process.env.EMAIL_APP_PASSWORD,
 
     },
 
 
-    connectionTimeout: 10000,
+    tls: {
 
-    greetingTimeout: 10000,
+      rejectUnauthorized: false,
 
-    socketTimeout: 10000,
+    },
 
-});
+  });
 
-
-
-// Test SMTP connection when server starts
-
-transporter.verify((error, success) => {
-
-  if (error) {
-
-    console.error(
-      "SMTP VERIFY FAILED:",
-      error
-    );
-
-  } else {
-
-    console.log(
-      "SMTP READY"
-    );
-
-  }
-
-});
+}
 
 
 
@@ -85,13 +55,35 @@ export async function sendEmail(
   );
 
 
+
+  const transporter =
+    createTransporter();
+
+
+
   try {
+
+
+    console.log(
+      "Checking SMTP connection..."
+    );
+
+
+    await transporter.verify();
+
+
+
+    console.log(
+      "SMTP connection successful"
+    );
+
 
 
     console.log(
       "SMTP sending started:",
       to
     );
+
 
 
     const info =
@@ -117,6 +109,10 @@ export async function sendEmail(
 
 
 
+    transporter.close();
+
+
+
     return info;
 
 
@@ -130,9 +126,16 @@ export async function sendEmail(
     );
 
 
+    try {
+
+      transporter.close();
+
+    } catch {}
+
+
+
     throw error;
 
   }
-
 
 }
