@@ -3,305 +3,229 @@ import supabase from "../supabaseClient.js";
 import { sendEmail } from "../services/emailService.js";
 
 
-console.log(
-  "Email notification cron loaded"
-);
-
+console.log("Email notification cron loaded");
 
 
 let running = false;
 
 
+cron.schedule("* * * * *", async () => {
 
-function timeoutPromise(promise, ms) {
-
-  return Promise.race([
-
-    promise,
-
-    new Promise((_, reject) => {
-
-      setTimeout(() => {
-
-        reject(
-          new Error(
-            "Operation timed out"
-          )
-        );
-
-      }, ms);
-
-    }),
-
-  ]);
-
-}
+  if (running) {
+    console.log("Previous cron still running, skipping");
+    return;
+  }
 
 
-
-cron.schedule(
-  "* * * * *",
-  async () => {
+  running = true;
 
 
-    if (running) {
+  console.log("========== CRON START ==========");
 
-      console.log(
-        "Previous cron still running, skipping"
+
+  try {
+
+
+    console.log("Fetching notification rows...");
+
+
+    const {
+      data: notificationRows,
+      error
+    } = await supabase
+      .from("Notification Time")
+      .select(
+        "id, notification_time"
+      );
+
+
+    if (error) {
+
+      console.error(
+        "Notification fetch error:",
+        error
       );
 
       return;
-
     }
 
 
-    running = true;
-
-
-
     console.log(
-      "========== CRON START =========="
+      "Rows:",
+      notificationRows.length
     );
 
 
 
-    try {
+    const singaporeTime =
+      new Intl.DateTimeFormat(
+        "en-US",
+        {
+          timeZone:"Asia/Singapore",
+          hour:"2-digit",
+          minute:"2-digit",
+          hour12:false,
+        }
+      )
+      .format(new Date());
+
+
+
+    const [
+      currentHour,
+      currentMinute
+    ] =
+      singaporeTime
+      .split(":")
+      .map(Number);
+
+
+
+    console.log(
+      "Current SG time:",
+      currentHour,
+      currentMinute
+    );
+
+
+
+    for (const row of notificationRows) {
+
+
+      if (!row.notification_time)
+        continue;
+
+
+
+      const [
+        notifHour,
+        notifMinute
+      ] =
+      row.notification_time
+        .slice(0,5)
+        .split(":")
+        .map(Number);
+
+
+
+      console.log({
+        user: row.id,
+        notificationTime:
+          `${notifHour}:${notifMinute}`,
+        currentTime:
+          `${currentHour}:${currentMinute}`
+      });
+
+
+
+      if (
+        notifHour !== currentHour ||
+        notifMinute !== currentMinute
+      ) {
+        continue;
+      }
+
 
 
       console.log(
-        "Fetching notification rows..."
+        "Notification due:",
+        row.id
       );
 
 
 
       const {
-        data: notificationRows,
-        error
-      } = await timeoutPromise(
+        data:userData,
+        error:userError
 
-        supabase
-          .from("Notification Time")
-          .select(
-            "id, notif_time"
-          ),
-
-        15000
-
+      } =
+      await supabase.auth.admin.getUserById(
+        row.id
       );
 
 
 
-      if (error) {
-
-        console.error(
-          "Notification fetch error:",
-          error
-        );
-
-        return;
-
-      }
-
-
-
-      console.log(
-        "Rows:",
-        notificationRows.length
-      );
-
-
-
-      const singaporeTime =
-        new Intl.DateTimeFormat(
-          "en-US",
-          {
-            timeZone:
-              "Asia/Singapore",
-
-            hour:
-              "2-digit",
-
-            minute:
-              "2-digit",
-
-            hour12:false,
-          }
-        ).format(new Date());
-
-
-
-      const [
-        currentHour,
-        currentMinute
-      ] =
-        singaporeTime
-          .split(":")
-          .map(Number);
-
-
-
-      console.log(
-        "Current SG time:",
-        currentHour,
-        currentMinute
-      );
-
-
-
-
-      for (
-        const row of notificationRows
+      if (
+        userError ||
+        !userData?.user
       ) {
 
-
-        if (!row.notif_time)
-          continue;
-
-
-
-        const notifTimeSG =
-          new Intl.DateTimeFormat(
-            "en-US",
-            {
-              timeZone:
-                "Asia/Singapore",
-
-              hour:
-                "2-digit",
-
-              minute:
-                "2-digit",
-
-              hour12:false,
-            }
-          )
-          .format(
-            new Date(row.notif_time)
-          );
-
-
-
-        const [
-          notifHour,
-          notifMinute
-        ] =
-          notifTimeSG
-            .split(":")
-            .map(Number);
-
-
-
-
-        if (
-          notifHour !== currentHour ||
-          notifMinute !== currentMinute
-        ) {
-
-          continue;
-
-        }
-
-
-
-
-        console.log(
-          "Notification due:",
-          row.id
+        console.error(
+          "User fetch failed:",
+          userError
         );
 
-
-
-        const {
-          data:userData,
-          error:userError
-
-        } =
-          await supabase.auth.admin.getUserById(
-            row.id
-          );
-
-
-
-        if (
-          userError ||
-          !userData?.user
-        ) {
-
-          console.error(
-            "User fetch failed:",
-            userError
-          );
-
-          continue;
-
-        }
-
-
-
-        const user =
-          userData.user;
-
-
-
-        if (
-          !user.email_confirmed_at
-        ) {
-
-          console.log(
-            "Email not verified:",
-            user.email
-          );
-
-          continue;
-
-        }
-
-
-
-        const name =
-          user.user_metadata
-            ?.display_name ??
-          "User";
-
-
-
-        await sendEmail(
-
-          user.email,
-
-          "DopaMIND Reminder",
-
-          `Hi ${name}, this is your scheduled reminder from DopaMIND.`
-
-        );
-
-
+        continue;
       }
 
 
 
-    } catch(error) {
+      const user =
+        userData.user;
 
 
-      console.error(
-        "CRON FAILED:",
-        error
+
+      if (!user.email_confirmed_at) {
+
+        console.log(
+          "Email not verified:",
+          user.email
+        );
+
+        continue;
+      }
+
+
+
+      const name =
+        user.user_metadata
+        ?.display_name ??
+        "User";
+
+
+
+      await sendEmail(
+
+        user.email,
+
+        "DopaMIND Reminder",
+
+        `Hi ${name}, this is your scheduled reminder from DopaMIND.`
+
       );
-
-
-    } finally {
-
-
-      running = false;
 
 
       console.log(
-        "========== CRON END =========="
+        "Reminder sent:",
+        user.email
       );
+
 
     }
 
 
 
+  } catch(error) {
+
+
+    console.error(
+      "CRON FAILED:",
+      error
+    );
+
+
+  } finally {
+
+
+    running = false;
+
+
+    console.log(
+      "========== CRON END =========="
+    );
+
+
   }
-);
+
+
+});
