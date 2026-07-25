@@ -21,52 +21,40 @@ function createTransporter() {
 
     port: 587,
 
-    secure: false,
-
-    family: 4,
-
+    secure: false, // STARTTLS
 
     auth: {
+
       user: process.env.EMAIL_USER,
+
       pass: process.env.EMAIL_APP_PASSWORD,
+
     },
 
 
-    connectionTimeout: 10000,
+    logger: true,
 
-    greetingTimeout: 10000,
+    debug: true,
 
-    socketTimeout: 10000,
+
+    connectionTimeout: 30000,
+
+    greetingTimeout: 30000,
+
+    socketTimeout: 30000,
+
+
+    tls: {
+
+      rejectUnauthorized: false,
+
+    },
 
   });
 
 }
 
 
-
-function timeoutPromise(promise, ms) {
-
-  return Promise.race([
-
-    promise,
-
-    new Promise((_, reject) => {
-
-      setTimeout(() => {
-
-        reject(
-          new Error(
-            "Email sending timed out"
-          )
-        );
-
-      }, ms);
-
-    }),
-
-  ]);
-
-}
 
 
 
@@ -76,17 +64,35 @@ export async function sendEmail(
   text
 ) {
 
+
   console.log(
     "Preparing email:",
     to
   );
 
 
-  const transporter = createTransporter();
+  const transporter =
+    createTransporter();
 
 
 
   try {
+
+
+    console.log(
+      "Checking SMTP connection..."
+    );
+
+
+    await transporter.verify();
+
+
+
+    console.log(
+      "SMTP connection successful"
+    );
+
+
 
     console.log(
       "SMTP sending started:",
@@ -94,9 +100,9 @@ export async function sendEmail(
     );
 
 
-    const info = await timeoutPromise(
 
-      transporter.sendMail({
+    const info =
+      await transporter.sendMail({
 
         from:
           `"DopaMIND" <${process.env.EMAIL_USER}>`,
@@ -107,11 +113,8 @@ export async function sendEmail(
 
         text,
 
-      }),
+      });
 
-      20000
-
-    );
 
 
     console.log(
@@ -120,23 +123,31 @@ export async function sendEmail(
     );
 
 
-    await transporter.close();
+
+    transporter.close();
+
 
 
     return info;
+
 
 
   } catch(error) {
 
 
     console.error(
-      "EMAIL FAILED:",
-      error.message
+      "EMAIL FAILED:"
     );
 
 
+    console.error(error);
+
+
+
     try {
+
       transporter.close();
+
     } catch {}
 
 
