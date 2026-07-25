@@ -21,7 +21,10 @@ function createTransporter() {
 
     port: 587,
 
-    secure: false, // STARTTLS
+    secure: false,
+
+    family: 4,
+
 
     auth: {
 
@@ -95,8 +98,7 @@ export async function sendEmail(
 
 
     console.log(
-      "SMTP sending started:",
-      to
+      "Sending email now..."
     );
 
 
@@ -127,7 +129,6 @@ export async function sendEmail(
     transporter.close();
 
 
-
     return info;
 
 
@@ -136,12 +137,9 @@ export async function sendEmail(
 
 
     console.error(
-      "EMAIL FAILED:"
+      "EMAIL FAILED:",
+      error
     );
-
-
-    console.error(error);
-
 
 
     try {
