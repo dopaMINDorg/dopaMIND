@@ -1,27 +1,54 @@
 import nodemailer from "nodemailer";
 
 
+console.log(
+  "EMAIL_USER:",
+  process.env.EMAIL_USER
+);
+
+console.log(
+  "APP PASSWORD LENGTH:",
+  process.env.EMAIL_APP_PASSWORD?.length
+);
+
+
+
 function createTransporter() {
 
   return nodemailer.createTransport({
 
-    service: "gmail",
+    host: "smtp.gmail.com",
+
+    port: 465,
+
+    secure: true,
 
     auth: {
+
       user: process.env.EMAIL_USER,
+
       pass: process.env.EMAIL_APP_PASSWORD,
+
     },
+
 
     logger: true,
+
     debug: true,
 
-    tls: {
-      rejectUnauthorized: false,
-    },
+
+    connectionTimeout: 15000,
+
+    greetingTimeout: 15000,
+
+    socketTimeout: 15000,
+
 
   });
 
 }
+
+
 
 
 
@@ -38,6 +65,7 @@ export async function sendEmail(
   );
 
 
+
   const transporter =
     createTransporter();
 
@@ -51,6 +79,7 @@ export async function sendEmail(
     );
 
 
+    // Test SMTP connection
     await transporter.verify();
 
 
@@ -89,6 +118,7 @@ export async function sendEmail(
     );
 
 
+
     transporter.close();
 
 
@@ -97,16 +127,22 @@ export async function sendEmail(
 
 
 
-  } catch(error){
+  } catch(error) {
 
 
     console.error(
-      "EMAIL ERROR:",
+      "EMAIL FAILED:",
       error
     );
 
 
-    transporter.close();
+
+    try {
+
+      transporter.close();
+
+    } catch {}
+
 
 
     throw error;
