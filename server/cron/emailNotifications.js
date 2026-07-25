@@ -19,10 +19,10 @@ cron.schedule(
   async () => {
 
 
-    if(running){
+    if (running) {
 
       console.log(
-        "Previous cron still running"
+        "Previous cron still running, skipping"
       );
 
       return;
@@ -44,6 +44,12 @@ cron.schedule(
     try {
 
 
+      console.log(
+        "Fetching notification rows..."
+      );
+
+
+
       const {
         data: notificationRows,
         error
@@ -52,7 +58,7 @@ cron.schedule(
       await supabase
         .from("Notification Time")
         .select(
-          "id, notif_time"
+          "id, notification_time"
         );
 
 
@@ -60,7 +66,7 @@ cron.schedule(
       if(error){
 
         console.error(
-          "Fetch notification error:",
+          "Notification fetch error:",
           error
         );
 
@@ -78,7 +84,7 @@ cron.schedule(
 
 
 
-      const currentSGTime =
+      const singaporeTime =
         new Intl.DateTimeFormat(
           "en-US",
           {
@@ -92,7 +98,7 @@ cron.schedule(
             minute:
               "2-digit",
 
-            hour12:false
+            hour12:false,
 
           }
         )
@@ -102,16 +108,21 @@ cron.schedule(
 
 
 
-
       const [
         currentHour,
         currentMinute
       ]
       =
-      currentSGTime
+      singaporeTime
         .split(":")
         .map(Number);
 
+
+
+      console.log(
+        "Current SG time:",
+        singaporeTime
+      );
 
 
 
@@ -121,12 +132,6 @@ cron.schedule(
 
 
 
-      console.log(
-        "Current SG time:",
-        currentSGTime
-      );
-
-
 
 
       for(
@@ -134,7 +139,14 @@ cron.schedule(
       ){
 
 
-        if(!row.notif_time){
+        if(
+          !row.notification_time
+        ){
+
+          console.log(
+            "Missing notification time:",
+            row.id
+          );
 
           continue;
 
@@ -148,7 +160,7 @@ cron.schedule(
           notifMinute
         ]
         =
-        row.notif_time
+        row.notification_time
           .slice(0,5)
           .split(":")
           .map(Number);
@@ -162,39 +174,23 @@ cron.schedule(
 
 
 
+        console.log(
+          "TIME CHECK:",
+          {
+
+            user:
+              row.id,
+
+            notificationTime:
+              `${String(notifHour).padStart(2,"0")}:${String(notifMinute).padStart(2,"0")}`,
+
+            currentTime:
+              singaporeTime,
+
+          }
+        );
 
 
-        console.log({
-
-          user:
-            row.id,
-
-          notificationTime:
-            row.notif_time,
-
-          currentTime:
-            currentSGTime
-
-        });
-
-
-
-
-
-        /*
-          Allow 5 minute delay
-          Example:
-          21:30 notification
-
-          Sends:
-          21:30
-          21:31
-          21:32
-          21:33
-          21:34
-          21:35
-
-        */
 
 
         if(
@@ -202,32 +198,57 @@ cron.schedule(
           currentTotal > notifTotal + 5
         ){
 
+          console.log(
+            "TIME NOT MATCHED:",
+            row.id
+          );
+
           continue;
 
         }
 
 
 
-
-
         console.log(
-          "Notification due:",
+          "TIME MATCHED:",
           row.id
         );
 
 
 
 
+
+        console.log(
+          "Fetching auth user:",
+          row.id
+        );
+
+
+
         const {
           data:userData,
           error:userError
-
         }
         =
         await supabase.auth.admin
           .getUserById(
             row.id
           );
+
+
+
+
+        console.log(
+          "AUTH RESULT:",
+          {
+            email:
+              userData?.user?.email,
+
+            error:
+              userError
+
+          }
+        );
 
 
 
@@ -256,8 +277,8 @@ cron.schedule(
 
 
         console.log(
-          "User email:",
-          user.email
+          "EMAIL VERIFIED:",
+          user.email_confirmed_at
         );
 
 
@@ -279,10 +300,9 @@ cron.schedule(
 
 
 
-
         const name =
           user.user_metadata
-          ?.display_name ??
+            ?.display_name ??
           "User";
 
 
@@ -300,7 +320,6 @@ cron.schedule(
 
 
 
-
         console.log(
           "Reminder sent:",
           user.email
@@ -308,6 +327,7 @@ cron.schedule(
 
 
       }
+
 
 
 
@@ -332,7 +352,6 @@ cron.schedule(
 
 
     }
-
 
 
   }
