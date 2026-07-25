@@ -15,49 +15,66 @@ const Preferences = () => {
   const [currentNotifTime, setCurrentNotifTime] = useState("00:00")
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [aiError, setAiError] = useState("")
 
   const generatePreferences = async (prompt) => {
-    try {
-      setLoading(true);
-      console.log("1. Starting AI generation");
-    console.log("Prompt:", prompt);
-      console.log("Sending to Edge Function:", prompt);
+  try {
+    setLoading(true);
+    setAiError("");
 
-      const { data: sessionData } = await supabase.auth.getSession();
+    console.log("1. Starting AI generation");
+    console.log("Prompt:", prompt);
+
+    const { data: sessionData } = await supabase.auth.getSession();
 
     const session = sessionData.session;
 
-    console.log("Session:", session);
+    if (!session) {
+      setAiError("You are not logged in.");
+      return;
+    }
 
-
-      const { data, error } = await supabase.functions.invoke(
-        "generate-preferences",
-        {
-    body: {
-      prompt,
-    },
-    headers: {
-      Authorization: `Bearer ${session.access_token}`,
-    },
-  }
-);
-       console.log("3. Edge function returned");
+    const { data, error } = await supabase.functions.invoke(
+      "generate-preferences",
+      {
+        body: {
+          prompt,
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      }
+    );
 
     console.log("AI response:", data);
     console.log("AI error:", error);
 
-      if (error) {
-        throw error;
+    if (error) {
+      try {
+        const errorBody = await error.context.json();
+
+        console.log("Edge Function error:", errorBody);
+
+        setAiError(errorBody.error);
+      } catch {
+        setAiError("AI generation failed. Please try again.");
       }
-      console.log("AI response:", data);
-      await fetchPreferences();
-      setShowPopup(false);
-    } catch (error) {
-      console.error("Generate failed:", error);
-    } finally {
-      setLoading(false);
+
+      return;
     }
-  };
+
+    await fetchPreferences();
+    setShowPopup(false);
+
+  } catch (error) {
+    console.error("Generate failed:", error);
+    setAiError("Something went wrong generating preferences.");
+
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleDelete = async (id) => {
     setPrefs(prevPrefs => {
@@ -224,7 +241,8 @@ const Preferences = () => {
         <Popup 
         onClose={() => setShowPopup(false)}
         onGenerate={generatePreferences}
-        loading={loading} />
+        loading={loading}
+        aiError={aiError} />
       )} 
 
 

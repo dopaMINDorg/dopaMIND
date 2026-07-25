@@ -4,7 +4,7 @@ import "./popup.css";
 
 const MAX_PROMPT_LENGTH = 100;
 
-function Popup({ onClose, onGenerate, loading}) {
+function Popup({ onClose, onGenerate, loading, aiError}) {
     const [prompt, setPrompt] = useState("");
     const [error, setError] = useState("");
 
@@ -48,6 +48,7 @@ function Popup({ onClose, onGenerate, loading}) {
                 {prompt.length}/{MAX_PROMPT_LENGTH}
             </div>
             {error && <div className="error">{error}</div>}
+            {aiError && <div className="error">{aiError}</div>}
             
         <button onClick={handleSubmit} disabled={loading}>
             {loading ? "Generating..." : "Generate"}
