@@ -83,88 +83,179 @@ const Preferences = () => {
   }
   
   const handleNotifTime = async (e) => {
+
   e.preventDefault();
 
+
   const {
-  data: { user },
-  error: userError,
-} = await supabase.auth.getUser();
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
-   if (userError || !user) {
-      alert("User not logged in")
-      setLoading(false);
-      return
-    }
 
-    if(!notifTime){
-      setFormError('Please fill in all the fields correctly')
-      return 
-    }
 
-    const [hours, minutes] = notifTime.split(":")
-    const notifDate = new Date()
-    notifDate.setHours(hours)
-    notifDate.setMinutes(minutes)
-    notifDate.setSeconds(0)
-    notifDate.setMilliseconds(0)
+  if(userError || !user){
 
-    const notif_time = notifDate.toISOString()
+    alert("User not logged in");
+    return;
 
-    const { data, error } = await supabase 
-      .from('Notification Time')
-      .update({notif_time})
-      .eq('id', user.id)
-      .select()
-
-    if (error){
-      console.log(error)
-      alert("unable to update time")
-      return
-    } 
-    
-      setFormError(null)
-      setCurrentNotifTime(notifTime)
-
-      alert(`Notification time updated to ${formatToAMPM(notifTime)}`) 
-      console.log(data)
-    
   }
 
 
-  const fetchNotifTime = async () => {
-    setLoading(true);
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      alert("User not logged in")
-      setLoading(false);
-      return
-    }
 
-    const { data, error } = await supabase
-    .from('Notification Time')
-    .select('notif_time')
-    .eq('id', user.id)
-    .single()
+  if(!notifTime){
 
-  if (error) {
-    console.log(error)
-    setLoading(false)
-    return
+    setFormError(
+      "Please fill in all the fields correctly"
+    );
+
+    return;
+
   }
 
-  if (data?.notif_time) {
-    const date = new Date(data.notif_time)
 
-    const hours = String(date.getHours()).padStart(2, '0')
-    const minutes = String(date.getMinutes()).padStart(2, '0')
 
-    setNotifTime(`${hours}:${minutes}`)
-    setCurrentNotifTime(`${hours}:${minutes}`)
+  const notif_time =
+    `${notifTime}:00`;
+
+
+
+  const {
+    data,
+    error
+  } =
+  await supabase
+    .from("Notification Time")
+    .update({
+      notif_time
+    })
+    .eq(
+      "id",
+      user.id
+    )
+    .select();
+
+
+
+  if(error){
+
+    console.error(
+      "UPDATE ERROR:",
+      error
+    );
+
+    alert(
+      "Unable to update time"
+    );
+
+    return;
+
   }
+
+
+
+  setFormError(null);
+
+  setCurrentNotifTime(
+    notifTime
+  );
+
+
+  alert(
+    `Notification time updated to ${formatToAMPM(notifTime)}`
+  );
+
+
+  console.log(data);
+
+};
+const fetchNotifTime = async () => {
+
+  setLoading(true);
+
+
+
+  const {
+    data:{user},
+    error:userError
+  }
+  =
+  await supabase.auth.getUser();
+
+
+
+  if(userError || !user){
+
+    alert(
+      "User not logged in"
+    );
+
+    setLoading(false);
+    return;
+
+  }
+
+
+
+
+  const {
+    data,
+    error
+  }
+  =
+  await supabase
+    .from("Notification Time")
+    .select(
+      "notif_time"
+    )
+    .eq(
+      "id",
+      user.id
+    )
+    .single();
+
+
+
+
+  if(error){
+
+    console.error(
+      error
+    );
+
+    setLoading(false);
+    return;
+
+  }
+
+
+
+
+  if(data?.notif_time){
+
+
+    const formatted =
+      data.notif_time
+        .slice(0,5);
+
+
+
+    setNotifTime(
+      formatted
+    );
+
+
+    setCurrentNotifTime(
+      formatted
+    );
+
+  }
+
+
 
   setLoading(false);
-}
 
+};
 
   
   const fetchPreferences = async () => {
