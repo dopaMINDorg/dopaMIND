@@ -77,19 +77,11 @@ async function startServer() {
 
   const PORT = process.env.PORT || 5000;
 
-
-  app.listen(PORT, () => {
-
-    console.log(
-      `🚀 Server running on port ${PORT}`
-    );
-
-    console.log(
-      "Process PID:",
-      process.pid
-    );
-
-  });
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(
+    `🚀 Server running on port ${PORT}`
+  );
+});
 
 }
 
