@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
 import dns from "dns";
 
+dns.setDefaultResultOrder("ipv4first");
+
 
 console.log(
   "EMAIL_USER:",
@@ -11,10 +13,6 @@ console.log(
   "APP PASSWORD LENGTH:",
   process.env.EMAIL_APP_PASSWORD?.length
 );
-
-
-// Force IPv4 DNS lookup
-dns.setDefaultResultOrder("ipv4first");
 
 
 
@@ -28,13 +26,9 @@ function createTransporter() {
 
     secure: false,
 
-
     auth: {
-
       user: process.env.EMAIL_USER,
-
       pass: process.env.EMAIL_APP_PASSWORD,
-
     },
 
 
@@ -51,9 +45,7 @@ function createTransporter() {
 
 
     tls: {
-
       rejectUnauthorized: false,
-
     },
 
   });
@@ -77,8 +69,7 @@ export async function sendEmail(
   );
 
 
-  const transporter =
-    createTransporter();
+  const transporter = createTransporter();
 
 
 
@@ -86,25 +77,8 @@ export async function sendEmail(
 
 
     console.log(
-      "Checking SMTP connection..."
+      "Sending email now..."
     );
-
-
-    await transporter.verify();
-
-
-
-    console.log(
-      "SMTP connection successful"
-    );
-
-
-
-    console.log(
-      "Sending email to:",
-      to
-    );
-
 
 
     const info =
@@ -129,11 +103,11 @@ export async function sendEmail(
     );
 
 
+
     transporter.close();
 
 
     return info;
-
 
 
   } catch(error) {
@@ -146,11 +120,8 @@ export async function sendEmail(
 
 
     try {
-
       transporter.close();
-
     } catch {}
-
 
     throw error;
 
