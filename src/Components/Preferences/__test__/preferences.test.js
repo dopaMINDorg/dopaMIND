@@ -312,7 +312,6 @@ describe('Set Time Preference', () => {
 
 test("renders Current Notification Time", async () => {
 render(<MockPreferences />);
-//waits for load
 const text = await screen.findByText(/Current notification time/i);
 expect(text).toBeInTheDocument();
 });

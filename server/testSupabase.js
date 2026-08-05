@@ -1,5 +1,4 @@
 import supabase from "./supabaseClient.js";
-
 async function test() {
   const { data, error } = await supabase
     .from("Notification Time")
@@ -9,5 +8,4 @@ async function test() {
   console.log("DATA:", data);
   console.log("ERROR:", error);
 }
-
 test();

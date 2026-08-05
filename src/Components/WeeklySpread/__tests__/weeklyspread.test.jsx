@@ -84,10 +84,8 @@ describe("Weekly Container Style States", () => {
     mockCurrentMode = 'focus';
     const { container } = renderWeeklySpread();
     
-    // Find your outermost container element
     const containerDiv = container.firstChild;
     
-    // Verify it contains your CSS layout hook
     expect(containerDiv).toHaveClass('weekly-container');
     expect(containerDiv).toHaveClass('focus');
     expect(containerDiv).not.toHaveClass('relax');

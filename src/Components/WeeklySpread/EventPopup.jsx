@@ -78,16 +78,6 @@ export default function EventPopup({
   }
 }, [isOpen, draftEvent]);
 
-  // useEffect(() => {
-  //   if (draftEvent) {
-  //     setForm({
-  //       id: draftEvent.id || null,
-  //       title: draftEvent.title || "",
-  //       start: new Date(draftEvent.start),
-  //       end: new Date(draftEvent.end),
-  //     })
-  //   }
-  // }, [draftEvent])
 
   if (!isOpen) return null
 

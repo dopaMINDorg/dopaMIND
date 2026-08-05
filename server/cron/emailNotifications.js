@@ -11,43 +11,26 @@ console.log(
 
 let running = false;
 
-
-
 cron.schedule(
   "* * * * *",
   async () => {
-
-
     if(running){
-
       console.log(
         "Previous cron still running, skipping"
       );
-
       return;
-
     }
-
-
 
     running = true;
 
-
-
     console.log(
-      "========== CRON START =========="
+      "CRON START"
     );
 
-
-
     try {
-
-
       console.log(
         "Fetching notification rows..."
       );
-
-
 
       const {
         data: notificationRows,
@@ -60,55 +43,35 @@ cron.schedule(
           "id, notification_time"
         );
 
-
-
       if(error){
-
         console.error(
           "Notification fetch error:",
           error
         );
-
         return;
-
       }
-
-
-
 
       console.log(
         "Rows:",
         notificationRows.length
       );
 
-
-
-
-
       const singaporeTime =
         new Intl.DateTimeFormat(
           "en-US",
           {
-
             timeZone:
               "Asia/Singapore",
-
             hour:
               "2-digit",
-
             minute:
               "2-digit",
-
             hour12:false,
-
           }
         )
         .format(
           new Date()
         );
-
-
-
 
       const [
         currentHour,
@@ -119,9 +82,6 @@ cron.schedule(
         .split(":")
         .map(Number);
 
-
-
-
       console.log(
         "Current SG time:",
         currentHour,
@@ -129,22 +89,12 @@ cron.schedule(
       );
 
 
-
-
-
       for(
         const row of notificationRows
       ){
-
-
-
         if(!row.notification_time){
-
           continue;
-
         }
-
-
 
         const [
           notifHour,
@@ -156,48 +106,29 @@ cron.schedule(
           .split(":")
           .map(Number);
 
-
-
-
         console.log({
-
           user: row.id,
-
           notificationTime:
             row.notification_time,
 
           currentHour,
-
           currentMinute,
-
           notifHour,
-
           notifMinute
 
         });
-
-
-
-
 
         if(
           notifHour !== currentHour ||
           notifMinute !== currentMinute
         ){
-
           continue;
-
         }
-
-
-
 
         console.log(
           "Notification due:",
           row.id
         );
-
-
 
 
         const {
@@ -209,8 +140,6 @@ cron.schedule(
           .getUserById(
             row.id
           );
-
-
 
 
         if(
@@ -227,14 +156,8 @@ cron.schedule(
 
         }
 
-
-
-
         const user =
           userData.user;
-
-
-
 
         if(
           !user.email_confirmed_at
@@ -249,16 +172,10 @@ cron.schedule(
 
         }
 
-
-
-
         console.log(
           "Sending email to:",
           user.email
         );
-
-
-
 
         const name =
           user.user_metadata
@@ -267,50 +184,28 @@ cron.schedule(
           "User";
 
 
-
-
         await sendEmail(
-
           user.email,
-
           "DopaMIND Reminder",
-
           `Hi ${name}, this is your scheduled reminder from DopaMIND.`
 
         );
 
-
-
       }
-
-
 
     }
     catch(error){
-
-
       console.error(
         "CRON FAILED:",
         error
       );
 
-
     }
     finally{
-
-
       running = false;
-
-
-
       console.log(
-        "========== CRON END =========="
+        "CRON END"
       );
-
-
     }
-
-
   }
-
 );

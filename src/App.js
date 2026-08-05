@@ -13,7 +13,7 @@ import Preferences from "./Components/Preferences/preferences.jsx"
 import Create from "./Components/Preferences/Create.jsx"
 import Update from "./Components/Preferences/Update.jsx"
 import ReflectionHistory from "./Components/Reflection/ReflectionHistory.jsx"
-/* i think it has to have .jsx at the end for vercel*/
+
 
 
 import { ModeProvider } from "./Context/ModeContext.jsx";
@@ -57,7 +57,7 @@ function App() {
         <div className="App">
           <Routes>
 
-            {/* Login Routes */}
+            
             <Route
               path="/"
               element={
@@ -80,7 +80,7 @@ function App() {
               }
             />
 
-            {/* Protected Routes */}
+            
             <Route
               path="/home"
               element={

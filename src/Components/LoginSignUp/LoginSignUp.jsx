@@ -26,7 +26,7 @@ const LoginSignUp = () => {
         password: password,
         options: {
           data: {
-            redirectTo: 'http://localhost:3000/login-sign-up', 
+            redirectTo: 'http://localhost:3000/login-sign-up', // might need to change to vercel link?
             display_name: name,
           }
         }

@@ -62,7 +62,7 @@
     color: #533a33;
 }
 
-/* --- Grid and Container Borders for Both Modes --- */
+
 .weekly-container.relax .rbc-time-view,
 .weekly-container.focus .rbc-time-view,
 .weekly-container.relax .rbc-time-header,
@@ -80,7 +80,6 @@
   border-color: #364a61 !important;
 }
 
-/* --- Stubborn Header/Content Borders for Both Modes --- */
 .weekly-container.relax .rbc-time-content,
 .weekly-container.focus .rbc-time-content {
   border-top: 1px solid #364a61 !important;
@@ -91,7 +90,6 @@
   border-bottom: 1px solid #364a61 !important;
 }
 
-/* --- Global Text & Button Colours (Applies automatically to both) --- */
 .rbc-header {
   color: #1f3a5f !important; 
 }
@@ -112,7 +110,6 @@
   color: #1f3a5f !important;
 }
 
-/* --- Current Day Column Highlight for Both Modes --- */
 .weekly-container.relax .rbc-time-header-cell.rbc-today,
 .weekly-container.focus .rbc-time-header-cell.rbc-today,
 .weekly-container.relax .rbc-time-header-content .rbc-today,
@@ -129,7 +126,6 @@
   background-color: #fff8d8 !important;
 }
 
-/* 2. Highlight the entire hourly grid column below it */
 .weekly-container.focus .rbc-day-slot.rbc-today {
   background-color: #fff8d8 !important;
 }
@@ -139,16 +135,15 @@
   background-color:  #e7f6fc !important;
 }
 
-/* 2. Highlight the entire hourly grid column below it */
 .weekly-container.relax .rbc-day-slot.rbc-today {
   background-color: #e7f6fc !important;
 }
 
 .weekly-header-container {
   display: flex;
-  align-items: center; /* Aligns items vertically in the center */
+  align-items: center; 
   justify-content: space-between;
-  gap: 20px; /* Prevents text from colliding */
+  gap: 20px; 
   padding: 10px;
   width: 97%;
   max-width: 100%;
@@ -156,21 +151,21 @@
 }
 
 .weekly-header {
-  flex-shrink: 0; /* Prevents "Weekly Spread" from squeezing/wrapping weirdly */
+  flex-shrink: 0; 
   font-size: clamp(32px, 3vw, 50px);
-  margin-bottom: 0; /* Removed to align nicely with the description */
+  margin-bottom: 0; 
   margin-left: 10px;
   color: #364a61;
 }
 
 .event-focus {
-  background-color: #4f46e5 !important; /* Indigo */
+  background-color: #4f46e5 !important;
   border-color: #4338ca !important;
   color: white !important;
 }
 
 .event-relax {
-  background-color: #10b981 !important; /* Emerald Green */
+  background-color: #10b981 !important; 
   border-color: #059669 !important;
   color: white !important;
 }

@@ -49,13 +49,13 @@ async function startServer() {
   });
 
 
-  // Keep track of process health
+  
   setInterval(() => {
 
     const memory = process.memoryUsage();
 
     console.log(
-      "❤️ HEARTBEAT",
+      "HEARTBEAT",
       new Date().toISOString(),
       {
         pid: process.pid,
@@ -66,20 +66,14 @@ async function startServer() {
 
   }, 60000);
 
-
-
-  // Load cron jobs after dotenv
   await import("./services/emailService.js");
   await import("./cron/emailNotifications.js");
   await import("./cron/dailyBonus.js");
-
-
-
   const PORT = process.env.PORT || 5000;
-
+  
 app.listen(PORT, "0.0.0.0", () => {
   console.log(
-    `🚀 Server running on port ${PORT}`
+    `Server running on port ${PORT}`
   );
 });
 

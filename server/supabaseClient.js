@@ -11,22 +11,9 @@ dotenv.config({
 });
 
 
-/*console.log("URL:", process.env.REACT_APP_SUPABASE_URL);
-console.log("Has key:", !!process.env.REACT_APP_SUPABASE_ANON_KEY);
-
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL
-const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY
-
-export default createClient(supabaseUrl, supabaseKey)*/
-
-
-
 console.log("URL:", process.env.REACT_APP_SUPABASE_URL);
 console.log("Has Service Key:", !!process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL
-// Changed: Fetching the service role key from process.env
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-// Changed: Passing the service role key to the client
 export default createClient(supabaseUrl, supabaseServiceKey)

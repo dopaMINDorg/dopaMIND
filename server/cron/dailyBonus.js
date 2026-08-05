@@ -31,15 +31,12 @@ cron.schedule("5 12 * * *", async () => {
     if (!grouped[event.user_id]) {
       grouped[event.user_id] = [];
     }
-
     grouped[event.user_id].push(event);
   }
 
 
   for (const userId of Object.keys(grouped)) {
-
     const userEvents = grouped[userId];
-
     const tasks = userEvents.filter(
       e => e.tags !== "relax"
     );
@@ -48,11 +45,9 @@ cron.schedule("5 12 * * *", async () => {
       e => e.tags === "relax"
     );
 
-
     const allTasksCompleted =
       tasks.length > 0 &&
       tasks.every(t => t.completed === true);
-
 
     const completedRelax =
       relaxActivities.some(
@@ -63,28 +58,21 @@ cron.schedule("5 12 * * *", async () => {
     let bonusPoints = 0;
     let rewardTypes = [];
 
-
-    // Bonus 1: Complete all tasks
     if (allTasksCompleted) {
       bonusPoints += 20;
       rewardTypes.push("all_tasks_bonus");
     }
 
-
-    // Bonus 2: Complete all tasks + relax
     if (allTasksCompleted && completedRelax) {
       bonusPoints += 20;
       rewardTypes.push("daily_bonus");
     }
 
-
-    // No bonuses earned
     if (bonusPoints === 0) {
       continue;
     }
 
 
-    // Prevent duplicate rewards
     for (const rewardType of rewardTypes) {
 
       const { data: existingReward } = await supabase
@@ -97,7 +85,6 @@ cron.schedule("5 12 * * *", async () => {
 
 
       if (existingReward) {
-        // already awarded this bonus
         bonusPoints -= rewardType === "all_tasks_bonus" ? 20 : 20;
         continue;
       }
@@ -140,8 +127,6 @@ cron.schedule("5 12 * * *", async () => {
         points: pointData.points + bonusPoints,
       })
       .eq("id", userId);
-
-
     console.log(
       `Awarded ${bonusPoints} daily bonus points to ${userId}`
     );
@@ -152,23 +137,16 @@ console.log(
   "Daily bonus cron loaded"
 );
 
-
-
 let running = false;
-
-
 
 cron.schedule(
   "5 0 * * *",
   async () => {
 
-
     if (running) {
-
       console.log(
         "Daily bonus already running"
       );
-
       return;
 
     }
@@ -188,7 +166,6 @@ cron.schedule(
       const yesterday =
         new Date();
 
-
       yesterday.setDate(
         yesterday.getDate() - 1
       );
@@ -201,12 +178,8 @@ cron.schedule(
           .split("T")[0];
 
 
-
-      const start =
-        `${date}T00:00:00.000Z`;
-
-      const end =
-        `${date}T23:59:59.999Z`;
+      const start = `${date}T00:00:00.000Z`;
+      const end = `${date}T23:59:59.999Z`;
 
 
 
@@ -218,16 +191,13 @@ cron.schedule(
         await supabase
 
           .from("events")
-
           .select(
             "user_id, completed, tags"
           )
-
           .gte(
             "start_time",
             start
           )
-
           .lte(
             "start_time",
             end
@@ -236,9 +206,7 @@ cron.schedule(
 
 
       if(error){
-
         console.error(error);
-
         return;
 
       }
@@ -252,23 +220,15 @@ cron.schedule(
 
 
 
-      // keep your existing bonus logic here
 
 
     } catch(error){
-
       console.error(
         "Daily bonus failed:",
         error
       );
-
-
     } finally {
-
-
       running=false;
-
-
       console.log(
         "Daily bonus finished"
       );

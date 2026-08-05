@@ -23,11 +23,7 @@
 .logout-button,
 .go-home-button {
   font-size: 18px;
-  
-
   padding: 10px 20px;
-
   border-radius: 12px;
-
   cursor: pointer;
 }

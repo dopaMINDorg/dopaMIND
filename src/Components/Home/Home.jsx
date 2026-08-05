@@ -93,17 +93,14 @@ const getLevel = (points) => {
   if (points < 1000) return 3;
   if (points < 1500) return 4;
 
-  // Levels 5-10 (500 point difference)
   if (points < 4500) {
     return 5 + Math.floor((points - 1500) / 500);
   }
 
-  // Levels 11-20 (1000 point difference)
   if (points < 14500) {
     return 11 + Math.floor((points - 4500) / 1000);
   }
 
-  // Levels 21-30 (2000 point difference)
   if (points < 34500) {
     return 21 + Math.floor((points - 14500) / 2000);
   }

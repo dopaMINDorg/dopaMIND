@@ -21,12 +21,9 @@ const Preferences = () => {
   try {
     setLoading(true);
     setAiError("");
-
-    console.log("1. Starting AI generation");
+    console.log("Starting AI generation");
     console.log("Prompt:", prompt);
-
     const { data: sessionData } = await supabase.auth.getSession();
-
     const session = sessionData.session;
 
     if (!session) {
@@ -52,73 +49,50 @@ const Preferences = () => {
     if (error) {
       try {
         const errorBody = await error.context.json();
-
         console.log("Edge Function error:", errorBody);
-
         setAiError(errorBody.error);
       } catch {
         setAiError("AI generation failed. Please try again.");
       }
-
       return;
     }
-
     await fetchPreferences();
     setShowPopup(false);
-
   } catch (error) {
     console.error("Generate failed:", error);
     setAiError("Something went wrong generating preferences.");
-
   } finally {
     setLoading(false);
   }
 };
-
 
   const handleDelete = async (id) => {
     setPrefs(prevPrefs => {
       return prevPrefs.filter(pr => pr.id !== id)
     })
   }
-  
   const handleNotifTime = async (e) => {
-
   e.preventDefault();
-
 
   const {
     data: { user },
     error: userError,
   } = await supabase.auth.getUser();
 
-
-
   if(userError || !user){
-
     alert("User not logged in");
     return;
-
   }
 
-
-
   if(!notifTime){
-
     setFormError(
       "Please fill in all the fields correctly"
     );
-
     return;
-
   }
-
-
 
   const notif_time =
     `${notifTime}:00`;
-
-
 
   const {
     data,
@@ -135,45 +109,29 @@ const Preferences = () => {
     )
     .select();
 
-
-
   if(error){
-
     console.error(
       "UPDATE ERROR:",
       error
     );
-
     alert(
       "Unable to update time"
     );
-
     return;
-
   }
 
-
-
   setFormError(null);
-
   setCurrentNotifTime(
     notifTime
   );
 
-
   alert(
     `Notification time updated to ${formatToAMPM(notifTime)}`
   );
-
-
   console.log(data);
-
 };
 const fetchNotifTime = async () => {
-
   setLoading(true);
-
-
 
   const {
     data:{user},
@@ -182,22 +140,14 @@ const fetchNotifTime = async () => {
   =
   await supabase.auth.getUser();
 
-
-
   if(userError || !user){
 
     alert(
       "User not logged in"
     );
-
     setLoading(false);
     return;
-
   }
-
-
-
-
   const {
     data,
     error
@@ -214,22 +164,13 @@ const fetchNotifTime = async () => {
     )
     .single();
 
-
-
-
   if(error){
-
     console.error(
       error
     );
-
     setLoading(false);
     return;
-
   }
-
-
-
 
   if(data?.notif_time){
 
@@ -238,20 +179,15 @@ const fetchNotifTime = async () => {
       data.notif_time
         .slice(0,5);
 
-
-
     setNotifTime(
       formatted
     );
-
 
     setCurrentNotifTime(
       formatted
     );
 
   }
-
-
 
   setLoading(false);
 
